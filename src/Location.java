@@ -1,17 +1,17 @@
+import java.util.ArrayList;
 
 public class Location {
 	private int x;
 	private int y;
 	private boolean obstacle;
+	private ArrayList<Agent> destinationsForAgents;
 	private Agent agent;
 	
 	
-	public Location(int x, int y, Agent agent) {
+	public Location(int x, int y) {
 		super();
 		this.x = x;
 		this.y = y;
-		this.obstacle = false;
-		this.agent = agent;
 	}
 
 	public Agent getAgent() {
@@ -33,7 +33,26 @@ public class Location {
 	public boolean isObstacle() {
 		return obstacle;
 	}
+	
+	public void setObstacle() {
+		obstacle = true;
+	}
+	
+	public void setAgentDest(Agent agent) {
+		destinationsForAgents.add(agent);
+	}
+	
+	public boolean isSomeDestination() {
+		return !destinationsForAgents.isEmpty();
+	}
+	
+	public boolean isDestinationOf(Agent agent) {
+		return destinationsForAgents.contains(agent);
+	}
 
+	public String toString() {
+		return "[" + x + "," + y +"]" + (obstacle ? "O" : "");
+	}
 
 
 }
