@@ -12,10 +12,7 @@ public class App {
 		printState();
 		int moveCnt = 0;
 		while (!offAgents.finished() && moveCnt < maxMoves) {
-			for (Agent a: offAgents) {
-				Location next = a.BFS(map, a.getTargetLocation());
-				a.makeMove(map, next);
-			}
+			offAgents.playMove(map);
 			moveCnt++;
 			printState();
 		}
@@ -27,6 +24,10 @@ public class App {
 		System.out.println(defAgents.toString());
 	}
 
+	/**
+	 * initialize map and agents 
+	 * @param input File describing the initial configuration
+	 */
 	private void initialize(File input) {
 		map = new Map(input);
 		createAgents();

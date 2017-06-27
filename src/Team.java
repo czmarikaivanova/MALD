@@ -20,6 +20,7 @@ public class Team implements Iterable<Agent> {
 	 * @param a
 	 */
 	public void add(Agent a) {
+		a.setAlg(new BFS());
 		agents.add(a);
 	}
 	
@@ -78,6 +79,13 @@ public class Team implements Iterable<Agent> {
 		}
 		System.out.println("All agents reached their destination.");
 		return true;
+	}
+
+	public void playMove(Map map) {
+		for (Agent agent: agents) {
+			agent.makeMove(map);
+			
+		}
 	}
 	
 	

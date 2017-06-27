@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * abstract class that defines basic properties of search strategies
@@ -8,5 +8,5 @@ import java.util.ArrayList;
 public abstract class Algorithm {
 	
 	// Find a path from a give agent in which the algorithm instance is located.
-	public abstract ArrayList<Location> findPath(Location start, Location target, Map map);
+	public abstract LinkedList<Location> findPath(Location start, Location target, Map map);
 }
