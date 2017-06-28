@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -34,6 +35,7 @@ public class Map implements Iterable<Location> {
 	}
 
 	private Location[][] grid;
+	private int[][] distances;
 	private int width;
 	private int height;
 
@@ -47,6 +49,7 @@ public class Map implements Iterable<Location> {
 				doc = dBuilder.parse(input);
 				doc.getDocumentElement().normalize();
 				createMapFromXML();
+				calculateDistances();
 			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -59,6 +62,48 @@ public class Map implements Iterable<Location> {
 			}
 	}
 
+	private void calculateDistances() {
+		int size = width * height;
+		distances = new int[size][size];
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (i == j) {
+					distances[i][j] = 0;
+				}
+				else {
+					distances[i][j] = Constants.INFINITY;
+				}
+			}
+			
+		}
+		for (Location loc: this) {
+			for (Location loc2: this) {
+				if (!loc.isObstacle() && !loc2.isObstacle() && loc.isNeighbour(loc2)) {
+					distances[loc.getId()][loc2.getId()] = 1;
+					distances[loc2.getId()][loc.getId()] = 1;
+				}
+			}
+		}
+
+		 for (int k = 0; k < size; k++) {
+		    for (int i = 0; i < size; i++) {
+		       for (int j = 0; j < size; j++){
+		          if (distances[i][j] > distances[i][k] + distances[k][j]) { 
+		        	  distances[i][j] =  distances[i][k] + distances[k][j];
+		          }
+		       }
+		    }
+		 }
+	}
+
+	private int getDistance(int l1, int l2) {
+		return distances[l1][l2];
+	}
+
+	public int getDistance(Location loc1, Location loc2) {
+		return distances[loc1.getId()][loc2.getId()];
+	}
+	
 	public String toString() {
 		String mapStr = "";
 		for (int w = 0; w < width; w++) {
@@ -79,7 +124,7 @@ public class Map implements Iterable<Location> {
 		}
 		return mapStr;
 	}
-
+	
 	/**
 	 * return the Location in the map
 	 * @param x - coordinate
@@ -88,6 +133,25 @@ public class Map implements Iterable<Location> {
 	 */
 	public Location getLocation(int x, int y) {
 		return grid[x][y];
+	}
+	
+	public ArrayList<Location> neighbors(Location loc, boolean onlyEmpty) {
+		ArrayList<Location> neighbours = new ArrayList<Location>();
+		for (int dir1 = -1; dir1 <= 1; dir1++) {
+			for (int dir2 = -1; dir2 <= 1; dir2++) {
+				if (Math.abs(dir1) != Math.abs(dir2)) { // do not include the current node in BFS and do not consider diagonals
+					int x = loc.getX() + dir1;
+					int y = loc.getY() + dir2;
+					if (x >= 0 && x < width && y >= 0 && y < height) { // we should not get out of the map
+						Location adjLoc = getLocation(x, y);
+						if (!adjLoc.isObstacle() && (!onlyEmpty || (adjLoc.getAgent() == null))) { // it will not be null
+							neighbours.add(adjLoc);
+						}
+					}
+				}
+			}
+		}
+		return neighbours;
 	}
 
 	/**
@@ -140,7 +204,7 @@ public class Map implements Iterable<Location> {
 		grid = new Location[width][height];
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				grid[i][j] = new Location(i, j);
+				grid[i][j] = new Location(i, j, j * width + i);
 			}
 		}
 		// OBSTACLES

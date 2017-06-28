@@ -20,7 +20,7 @@ public class Team implements Iterable<Agent> {
 	 * @param a
 	 */
 	public void add(Agent a) {
-		a.setAlg(new BFS());
+		a.setAlg(new LRAstar());
 		agents.add(a);
 	}
 	
@@ -42,10 +42,18 @@ public class Team implements Iterable<Agent> {
 		return (id == Constants.OFFENSIVE_TEAM ? Constants.OFFENSIVE_TEAM_NAME : Constants.DEFENSIVE_TEAM_NAME) + agents.toString();
 	}
 
+	/**
+	 * returns the iterator over the list of agents
+	 */
 	public Iterator<Agent> iterator() {
 		return new AgentIterator();
 	}
 	
+	/**
+	 * private class implementing iterator over the list of agents
+	 * @author marika
+	 *
+	 */
 	private class AgentIterator implements Iterator<Agent> {
 		private int cursor;
 
@@ -71,9 +79,13 @@ public class Team implements Iterable<Agent> {
 		}
 	}
 
+	/**
+	 * 
+	 * @return true if all agents are at their target locations
+	 */
 	public boolean finished() {
 		for (Agent a: agents) {
-			if (!a.getCurrentLocation().equals(a.getTargetLocation())) {
+			if (!a.atTarget()) {
 				return false;
 			}
 		}
@@ -81,6 +93,10 @@ public class Team implements Iterable<Agent> {
 		return true;
 	}
 
+	/**
+	 * play moves of agents one by one
+	 * @param map
+	 */
 	public void playMove(Map map) {
 		for (Agent agent: agents) {
 			agent.makeMove(map);

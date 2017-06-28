@@ -47,7 +47,10 @@ public class Agent {
 	 * @param map
 	 */
 	public void makeMove(Map map) {
-		if (path == null || path.size() == 0) {
+		if (atTarget()) {
+			return;
+		}
+		if (path == null || path.size() == 0 || path.getFirst().getAgent() != null) {
 			path = algorithm.findPath(myCurrentLocation, targetLocation, map);
 		}
 		Location newLoc =  path.remove();
@@ -120,5 +123,8 @@ public class Agent {
 		
 	}
 
+	public boolean atTarget() {
+		return myCurrentLocation.equals(targetLocation);
+	}
 	
 }

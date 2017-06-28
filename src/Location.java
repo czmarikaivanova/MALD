@@ -3,15 +3,16 @@ import java.util.ArrayList;
 public class Location {
 	private int x;
 	private int y;
+	private int id;
 	private boolean obstacle;
 	private ArrayList<Agent> destinationsForAgents;
 	private Agent agent;
 	
-	
-	public Location(int x, int y) {
+	public Location(int x, int y, int id) {
 		super();
 		this.x = x;
 		this.y = y;
+		this.id = id;
 	}
 
 	public Agent getAgent() {
@@ -28,6 +29,10 @@ public class Location {
 
 	public int getY() {
 		return y;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
 	public boolean isObstacle() {
@@ -51,8 +56,18 @@ public class Location {
 	}
 
 	public String toString() {
-		return "[" + x + "," + y +"]" + (obstacle ? "O" : "");
+		return id + ":[" + x + "," + y +"]" + (obstacle ? "X" : "");
 	}
 
+	public boolean isNeighbour(Location loc) {
+		if (this.getX() == loc.getX() && Math.abs(this.getY() - loc.getY()) == 1) {
+			return true;
+		}
+		if (this.getY() == loc.getY() && Math.abs(this.getX() - loc.getX()) == 1) {
+			return true;
+		}
+		return false;
+	}
+	
 
 }
