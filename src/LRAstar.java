@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Random;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class LRAstar extends Algorithm {
 			for (Location neighbour: neighbours) {
 				if (neighbour.equals(target)) {
 					prevs.put(target, q);
-					return constructPath(start, target);
+					return constructPath(map, start, target);
 				}
 				ghValues.put(neighbour, new Pair<Integer, Integer>(ghValues.get(q).getFirst() + map.getDistance(q, neighbour), map.getDistance(target, neighbour)));
 				 int distanceToMinNode = ghValues.get(q).getFirst();
@@ -49,14 +50,7 @@ public class LRAstar extends Algorithm {
 			closedList.add(q);
 			tms++;
 		}
-		Location loc = target;			// retrieve the next location
-		Location prevLoc = prevs.get(loc); // has to exist, because the case where the agent has reached the target is treated at the beginning
-		while (!prevLoc.equals(start)) {
-			loc = prevLoc;
-			path.add(0, loc); // add next location to the beginning
-			prevLoc = prevs.get(loc);
-		}
-		return constructPath(start, target);
+		return constructPath(map, start, target);
 	}
 	
 	// extrat a node with minimum distance
@@ -98,11 +92,14 @@ public class LRAstar extends Algorithm {
         }		
 	}
     
-    private LinkedList<Location> constructPath(Location start, Location target) {
+    private LinkedList<Location> constructPath(Map map, Location start, Location target) {
     	LinkedList<Location> constructedPath = new LinkedList<Location>();
     	constructedPath.addFirst(target);
 		Location loc = target;			// retrieve the next location
 		Location prevLoc = prevs.get(loc); // has to exist, because the case where the agent has reached the target is treated at the beginning
+		if (prevLoc == null) {
+			return randomMove(map, start); // no path currently exists.
+		}
 		while (!prevLoc.equals(start)) {
 			loc = prevLoc;	
 			constructedPath.add(0, loc); // add next location to the beginning
@@ -110,5 +107,13 @@ public class LRAstar extends Algorithm {
 		}
 		return constructedPath;
     }
+
+	private LinkedList<Location> randomMove(Map map, Location loc) {
+		LinkedList<Location> rndMove = new LinkedList<Location>();
+		ArrayList<Location> neighbors = map.neighbors(loc, true);
+		Random rnd = new Random();
+		rndMove.add(neighbors.get(rnd.nextInt(neighbors.size())));
+		return rndMove;
+	}
 }
 

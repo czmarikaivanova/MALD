@@ -12,9 +12,9 @@ public class App {
 		printState();
 		int moveCnt = 0;
 		while (!offAgents.finished() && moveCnt < maxMoves) {
+			printState();
 			offAgents.playMove(map);
 			moveCnt++;
-			printState();
 		}
 	}
 
