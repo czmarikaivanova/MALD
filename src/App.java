@@ -5,7 +5,7 @@ public class App {
 	private Map map;
 	private Team offAgents;
 	private Team defAgents;
-	private int maxMoves = 50;
+	private int maxMoves = 100;
 	
 	public App(File input) {
 		initialize(input);
@@ -17,6 +17,7 @@ public class App {
 			offAgents.playMove(map);
 			moveCnt++;
 		}
+		printState();
 		if (offAgents.finished()) {
 			System.out.println("All agents reached their destinations");
 		}
@@ -24,6 +25,7 @@ public class App {
 			int finishedCnt = offAgents.finishedCnt();
 			System.out.println("###" + finishedCnt + " agents reached their destination");
 		}
+
 	}
 
 	private void printState() {

@@ -251,7 +251,7 @@ public class Map implements Iterable<Location> {
 				}
 			}
 		}
-		// OBSTACLES
+		// TARGETS
 		nList = doc.getElementsByTagName("target");
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 			Node nNode = nList.item(temp);

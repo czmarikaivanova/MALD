@@ -111,6 +111,7 @@ public class LRAstar extends Algorithm {
 	private LinkedList<Location> randomMove(Map map, Location loc) {
 		LinkedList<Location> rndMove = new LinkedList<Location>();
 		ArrayList<Location> neighbors = map.neighbors(loc, true);
+		neighbors.add(loc);
 		Random rnd = new Random();
 		rndMove.add(neighbors.get(rnd.nextInt(neighbors.size())));
 		return rndMove;
