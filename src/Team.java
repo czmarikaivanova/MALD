@@ -118,7 +118,7 @@ public class Team implements Iterable<Agent> {
 		Collections.shuffle(targets);
 		int i = 0;
 		for (Agent agent: agents) {
-			if (i >= targets.size() || i > agents.size()) {  // asign always only one target to one agent
+			if (i >= targets.size()) {  // assign always only one target to one agent
 				return;
 			}
 			agent.setTargetLocation(targets.get(i));

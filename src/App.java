@@ -5,16 +5,17 @@ public class App {
 	private Map map;
 	private Team offAgents;
 	private Team defAgents;
-	private int maxMoves = 100;
+	private int maxMoves = 500;
 	
 	public App(File input) {
 		initialize(input);
 		printState();
 		int moveCnt = 0;
-//		defAgents.allocateTargetsRandom(map.getTargets());
+		defAgents.allocateTargetsRandom(map.getTargets());
 		while (!offAgents.finished() && moveCnt < maxMoves) {
 			printState();
 			offAgents.playMove(map);
+			defAgents.playMove(map);
 			moveCnt++;
 		}
 		printState();
