@@ -1,11 +1,10 @@
 import java.io.File;
-import java.util.ArrayList;
 
 public class App {
 	private Map map;
 	private Team offAgents;
 	private Team defAgents;
-	private int maxMoves = 500;
+	private int maxMoves = 200;
 	
 	public App(File input) {
 		initialize(input);
@@ -59,5 +58,6 @@ public class App {
 			}
 		}
 	}
+
 	
 }

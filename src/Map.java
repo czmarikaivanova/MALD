@@ -1,8 +1,11 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -43,13 +46,18 @@ public class Map implements Iterable<Location> {
 
 	public Map(File input) {
 		super();
+		String extension = "";
+		int i = input.getName().lastIndexOf('.');
+		if (i > 0) {
+		    extension = input.getName().substring(i+1);
+		}
+		if (extension.equalsIgnoreCase("xml")) { // input is a xml file
 			dbFactory = DocumentBuilderFactory.newInstance();
 			try {
 				dBuilder = dbFactory.newDocumentBuilder();
 				doc = dBuilder.parse(input);
 				doc.getDocumentElement().normalize();
 				createMapFromXML();
-				calculateDistances();
 			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -60,6 +68,10 @@ public class Map implements Iterable<Location> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else { // input is a map
+			readMap(input);
+		}
+		calculateDistances();
 	}
 
 	private void calculateDistances() {
@@ -264,6 +276,72 @@ public class Map implements Iterable<Location> {
 			}
 		}
 	}
+	
+	/**
+	 * Read map from moving ai file format
+	 * @param input file
+	 */
+	private void readMap(File input) {
+		try {
+			InputStream fis = new FileInputStream(input);
+		  	InputStreamReader isr = new InputStreamReader(fis);
+			BufferedReader br = new BufferedReader(isr);
+			String line;
+			while ((line = br.readLine()) != null) {
+				if (line.matches("height.*")) {
+					height = Integer.parseInt(line.split(" ")[1]);
+				} 
+				else if (line.matches("width.*")) {
+					width = Integer.parseInt(line.split(" ")[1]);
+				}
+				else if (line.matches("map.*")) {
+					grid = new Location[width][height];
+					for (int i = 0; i < width; i++) {
+						for (int j = 0; j < height; j++) {
+							grid[i][j] = new Location(i, j, j * width + i);
+						}
+					}					 
+					for (int i = 0; i < width; i ++) {
+						String mapLine = br.readLine();
+						for (int j = 0; j < height; j++) {
+							if (mapLine.charAt(j) == '#') {
+								grid[i][j].setObstacle();
+							}
+						}
+					}
+				}
+				else if (line.matches("Agents.*")) {
+					targets = new ArrayList<Location>();
+					int agentCnt = Integer.parseInt(line.split(" ")[1]);
+					String agentLine;
+					String[] agentLineSplit;
+ 					for (int i = 0; i < agentCnt; i++) {
+						agentLine = br.readLine();
+						agentLineSplit = agentLine.split(" ");
+						int x = Integer.parseInt(agentLineSplit[1]);
+						int y = Integer.parseInt(agentLineSplit[2]);
+						int agentId = Integer.parseInt(agentLineSplit[0]);
+						if (agentLineSplit.length > 3) {// Offensive agents
+							Location target = grid[Integer.parseInt(agentLineSplit[3])][Integer.parseInt(agentLineSplit[4])];
+							grid[x][y].setAgent(new Agent(agentId, Constants.OFFENSIVE_TEAM, grid[x][y], target));
+							targets.add(target);
+						}
+						else { // Defensive agents
+							grid[x][y].setAgent(new Agent(agentId, Constants.DEFENSIVE_TEAM, grid[x][y]));
+						}
+					}
+				}
+				else if (line.matches("end.*")) {
+					break;
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 
 	public ArrayList<Location> getTargets() {
 		return targets;

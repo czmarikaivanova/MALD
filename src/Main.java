@@ -7,7 +7,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new App(new File("input/input1.xml"));	
+		new App(new File("maps/arena2.map"));	
 	}
 	
 }

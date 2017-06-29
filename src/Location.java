@@ -20,6 +20,10 @@ public class Location {
 	}
 
 	public void setAgent(Agent agent) {
+		if (isObstacle()) {
+			System.err.println("Adding an agent into an obstacle!");
+			System.exit(1);
+		}
 		this.agent = agent;
 	}
 
