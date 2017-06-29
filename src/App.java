@@ -11,10 +11,18 @@ public class App {
 		initialize(input);
 		printState();
 		int moveCnt = 0;
+//		defAgents.allocateTargetsRandom(map.getTargets());
 		while (!offAgents.finished() && moveCnt < maxMoves) {
 			printState();
 			offAgents.playMove(map);
 			moveCnt++;
+		}
+		if (offAgents.finished()) {
+			System.out.println("All agents reached their destinations");
+		}
+		else {
+			int finishedCnt = offAgents.finishedCnt();
+			System.out.println("###" + finishedCnt + " agents reached their destination");
 		}
 	}
 

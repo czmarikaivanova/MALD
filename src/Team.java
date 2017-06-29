@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -89,7 +90,6 @@ public class Team implements Iterable<Agent> {
 				return false;
 			}
 		}
-		System.out.println("All agents reached their destination.");
 		return true;
 	}
 
@@ -104,7 +104,37 @@ public class Team implements Iterable<Agent> {
 		}
 	}
 	
-	
+	public void allocateTargets() {
+		for (Agent agent: agents) {
+			// TODO
+		}
+	}
+
+	/**
+	 * allocate targets to agents randomly
+	 * @param targets
+	 */
+	public void allocateTargetsRandom(ArrayList<Location> targets) {
+		Collections.shuffle(targets);
+		int i = 0;
+		for (Agent agent: agents) {
+			if (i >= targets.size() || i > agents.size()) {  // asign always only one target to one agent
+				return;
+			}
+			agent.setTargetLocation(targets.get(i));
+			i++;
+		}
+	}
+
+	public int finishedCnt() {
+		int cnt = 0;
+		for (Agent a: agents) {
+			if (a.atTarget()) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
 	
 	
 }

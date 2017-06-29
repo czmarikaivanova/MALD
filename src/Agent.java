@@ -7,10 +7,18 @@ public class Agent {
 	private int id;
 	private int team;
 	private Location myCurrentLocation;
-	private Location initLocation;
+	private Location initLocation; // TODO: maybe remove
 	private Location targetLocation;
 	private Algorithm algorithm;
 	private LinkedList<Location> path;
+	
+	public Agent(int id, int team, Location initLocation) {
+		super();
+		this.id = id;
+		this.team = team;
+		this.initLocation = initLocation;
+		this.myCurrentLocation = initLocation;
+	}
 	
 	public Agent(int id, int team, Location initLocation, Location targetLocation) {
 		super();
@@ -103,6 +111,13 @@ public class Agent {
 	 */
 	public Location getTargetLocation() {
 		return targetLocation;
+	}
+	
+	/**
+	 * set a new target location
+	 */
+	public void setTargetLocation(Location target) {
+		this.targetLocation = target;
 	}
 	
 	public Location getCurrentLocation() {

@@ -35,10 +35,10 @@ public class Map implements Iterable<Location> {
 	}
 
 	private Location[][] grid;
+	private ArrayList<Location> targets;
 	private int[][] distances;
 	private int width;
 	private int height;
-
 
 
 	public Map(File input) {
@@ -201,6 +201,7 @@ public class Map implements Iterable<Location> {
 		Element gElement = (Element) doc.getElementsByTagName("map").item(0);            
 		width = Integer.parseInt(gElement.getAttribute("width"));
 		height = Integer.parseInt(gElement.getAttribute("height"));
+		targets = new ArrayList<Location>();
 		grid = new Location[width][height];
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
@@ -230,16 +231,42 @@ public class Map implements Iterable<Location> {
 				int yinit = Integer.parseInt(eElement.getAttribute("yinit"));
 				Location initLocation = grid[xinit][yinit];
 				if (teamId == Constants.OFFENSIVE_TEAM) {
-					int xtarget = Integer.parseInt(eElement.getAttribute("xtarget"));
-					int ytarget = Integer.parseInt(eElement.getAttribute("ytarget"));
-					Location targetLocation = grid[xtarget][ytarget];
-					grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, targetLocation));
+
+					String xtargetS = eElement.getAttribute("xtarget");
+					String ytargetS = eElement.getAttribute("ytarget");
+					if (!xtargetS.isEmpty()) { // targets defined
+						int xtarget = Integer.parseInt(xtargetS);
+						int ytarget = Integer.parseInt(ytargetS);
+						Location targetLocation = grid[xtarget][ytarget];
+						grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, targetLocation));
+						targets.add(targetLocation);
+					}
+					else {
+						grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, null));
+
+					}
 				}
 				else {
 					grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, null));
 				}
 			}
 		}
+		// OBSTACLES
+		nList = doc.getElementsByTagName("target");
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			Node nNode = nList.item(temp);
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element eElement = (Element) nNode;
+				int x = Integer.parseInt(eElement.getAttribute("xtarget"));
+				int y = Integer.parseInt(eElement.getAttribute("ytarget"));
+				Location target = getLocation(x, y);
+				targets.add(target);
+			}
+		}
+	}
+
+	public ArrayList<Location> getTargets() {
+		return targets;
 	}
 
 
