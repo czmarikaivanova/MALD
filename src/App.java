@@ -4,7 +4,7 @@ public class App {
 	private Map map;
 	private Team offAgents;
 	private Team defAgents;
-	private int maxMoves = 30;
+	private int maxMoves = 100;
 	
 	public App(File input) {
 		initialize(input);
