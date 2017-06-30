@@ -4,15 +4,20 @@ import java.util.LinkedList;
 
 public class BFS extends Algorithm {
 
+	HashMap<Location, Boolean> flags = new HashMap<Location, Boolean>();
+	HashMap<Location, Location> prevs = new HashMap<Location, Location>();
+	
 	@Override
 	public LinkedList<Location> findPath(Location start, Location target, Map map) {
 		LinkedList<Location> path = new LinkedList<Location>();	
-		path.add(target);
-		if (start.equals(target)) {
-			return path; // don't move if you have arrived there
+		if (target != null) { // target null means we want all paths from start
+			path.add(target);
+			if (start.equals(target)) {
+				return path; // don't move if you have arrived there
+			}
 		}
-		HashMap<Location, Boolean> flags = new HashMap<Location, Boolean>();
-		HashMap<Location, Location> prevs = new HashMap<Location, Location>();
+		flags = new HashMap<Location, Boolean>();
+		prevs = new HashMap<Location, Location>();
 		for (Location loc: map) { // INIT
 			flags.put(loc, false);
 			prevs.put(loc, null);
@@ -39,15 +44,48 @@ public class BFS extends Algorithm {
 				}
 			}
 		}
-		Location loc = target;			// retrieve the next location
-		Location prevLoc = prevs.get(loc); // has to exist, because the case where the agent has reached the target is treated at the beginning
-		while (!prevLoc.equals(start)) {
-			loc = prevLoc;
-			path.add(0, loc); // add next location to the beginning
-			prevLoc = prevs.get(loc);
+		if (target != null) {
+			Location loc = target;			// retrieve the next location
+			Location prevLoc = prevs.get(loc); // has to exist, because the case where the agent has reached the target is treated at the beginning
+			while (!prevLoc.equals(start)) {
+				loc = prevLoc;
+				path.add(0, loc); // add next location to the beginning
+				prevLoc = prevs.get(loc);
+			}
+			return path;
 		}
-		return path;
+		else {
+			return null; // if target is null, we don't want any path. We need to fill the data structures only.
+		}
+	}
+	
+	public int minPathLength(Location start, Location target, Map map) {
+		return findPath(start, target, map).size();
 	}
 
+	/**
+	 * get distances from a particular node to all the remaining nodes.
+	 * @param map
+	 * @param start node for which we want to calculate the distances.
+	 * @return
+	 */
+	public int[] distsToLocation(Map map, Location start) {
+		findPath(start, null, map);
+		int[] dists = new int[map.getLocationCount()];
+		for (Location loc : map) {
+			if (!loc.isObstacle()) {
+				int dst = 0;
+				Location node = loc;
+				while (!node.equals(start)) {
+					node = prevs.get(node);
+					dst++;
+				}
+				dists[loc.getId()] = dst;
+			}
+		}
+		return dists;
+	}
+
+	
 }
 

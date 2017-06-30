@@ -8,6 +8,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		new App(new File("maps/arena2.map"));	
+//		new App(new File("input/input1.xml"));	
 	}
 	
 }

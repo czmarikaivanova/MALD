@@ -11,15 +11,18 @@ public class LRAstar extends Algorithm {
 	LinkedList<Location> closedList;
 	HashMap<Location, Pair<Integer, Integer>> ghValues;
 	HashMap<Location, Location> prevs = new HashMap<Location, Location>();
+	int[] dstsToTarget;
+	
 	
 	public LinkedList<Location> findPath(Location start, Location target, Map map) {
-		LinkedList<Location> path = new LinkedList<Location>();
 		openList = new LinkedList<Location>();
 		closedList = new LinkedList<Location>();
 		ghValues = new HashMap<Location, Pair<Integer,Integer>>();
 		prevs = new HashMap<Location, Location>();
+		dstsToTarget = new BFS().distsToLocation(map, target);
 		for (Location loc: map) {
-			ghValues.put(loc, new Pair<Integer, Integer>(Constants.INFINITY, map.getDistance(start, target)));
+			int dst = dstsToTarget[loc.getId()];
+			ghValues.put(loc, new Pair<Integer, Integer>(Constants.INFINITY, dst));
 		}
 		ghValues.put(start, new Pair<Integer, Integer>(0,0));
 		openList.add(start);
@@ -32,10 +35,12 @@ public class LRAstar extends Algorithm {
 					prevs.put(target, q);
 					return constructPath(map, start, target);
 				}
-				ghValues.put(neighbour, new Pair<Integer, Integer>(ghValues.get(q).getFirst() + map.getDistance(q, neighbour), map.getDistance(target, neighbour)));
-				 int distanceToMinNode = ghValues.get(q).getFirst();
-				 int distanceToN = distanceToMinNode + 1; // all edges have value 1 
-                 int alt = distanceToN + ghValues.get(neighbour).getSecond();
+				int distanceToMinNode = ghValues.get(q).getFirst();
+				int n_g = distanceToMinNode + 1;
+				int n_h = dstsToTarget[neighbour.getId()];
+				ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, n_h));
+				 
+                 int alt = n_g + ghValues.get(neighbour).getSecond();
                  int fValofN = ghValues.get(neighbour).getFirst() + ghValues.get(neighbour).getSecond();
                  if (openList.contains(neighbour) && fValofN <= alt) {
                      continue;
@@ -43,7 +48,7 @@ public class LRAstar extends Algorithm {
                  if (closedList.contains(neighbour) && fValofN <= alt) {
                      continue;
                  }
-                 ghValues.put(neighbour, new Pair<Integer, Integer>(distanceToN, map.getDistance(neighbour, target)));
+                 ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, dstsToTarget[neighbour.getId()]));
                  openList.add(neighbour);
                  prevs.put(neighbour, q);
 			}
