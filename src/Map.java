@@ -73,52 +73,8 @@ public class Map implements Iterable<Location> {
 			readMap(input);
 		}
 		locationCount = width * height;
-//		calculateDistances();
 	}
-//
-//	private void calculateDistances() {
-//		int size = width * height;
-//		distances = new int[size][size];
-//		for (int i = 0; i < size; i++) {
-//			for (int j = 0; j < size; j++) {
-//				if (i == j) {
-//					distances[i][j] = 0;
-//				}
-//				else {
-//					distances[i][j] = Constants.INFINITY;
-//				}
-//			}
-//			
-//		}
-//		for (Location loc: this) {
-//			for (Location loc2: this) {
-//				if (!loc.isObstacle() && !loc2.isObstacle() && loc.isNeighbour(loc2)) {
-//					distances[loc.getId()][loc2.getId()] = 1;
-//					distances[loc2.getId()][loc.getId()] = 1;
-//				}
-//			}
-//		}
-//
-//		 for (int k = 0; k < size; k++) {
-//		    for (int i = 0; i < size; i++) {
-//		       for (int j = 0; j < size; j++){
-//		          if (distances[i][j] > distances[i][k] + distances[k][j]) { 
-//		        	  distances[i][j] =  distances[i][k] + distances[k][j];
-//		          }
-//		       }
-//		    }
-//		 }
-//	}
-	
 
-//	public int getDistance(Location loc1, Location loc2) {
-//		return distances[loc1.getId()][loc2.getId()];
-//	}
-
-//	public int getDistance(Location loc1, Location loc2) {
-//		return new BFS().minPathLength(loc1, loc2, this);
-//	}
-	
 	public int getLocationCount() {
 		return locationCount;
 	}
@@ -128,14 +84,14 @@ public class Map implements Iterable<Location> {
 		for (int w = 0; w < width; w++) {
 			for (int h = 0; h < width; h++) {
 				if (grid[w][h].isObstacle()) {
-					mapStr += "X";
+					mapStr += "\u2588" +"|";
 				}
 				else {
 					Agent a = grid[w][h].getAgent();
 					if (a != null) {
-						mapStr += a.getTeam();
+						mapStr += a.getTeam() + "|";
 					} else {
-						mapStr += "_";						
+						mapStr += "_|";						
 					}
 				}
 			}
