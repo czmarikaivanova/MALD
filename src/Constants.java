@@ -14,6 +14,7 @@ public class Constants {
 	
 	public static final String OFFENSIVE_TEAM_NAME = "OFF";
 	public static final String DEFENSIVE_TEAM_NAME = "DEF";
+	public static final char TERRAIN_CHAR = '.';
 	
 	
 }

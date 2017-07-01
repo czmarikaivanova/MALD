@@ -267,7 +267,7 @@ public class Map implements Iterable<Location> {
 					for (int i = 0; i < width; i ++) {
 						String mapLine = br.readLine();
 						for (int j = 0; j < height; j++) {
-							if (mapLine.charAt(j) == '#') {
+							if (mapLine.charAt(j) != Constants.TERRAIN_CHAR) {
 								grid[i][j].setObstacle();
 							}
 						}
@@ -302,7 +302,10 @@ public class Map implements Iterable<Location> {
 		
 	}
 	
-
+	/**
+	 * 
+	 * @return list of target locations
+	 */
 	public ArrayList<Location> getTargets() {
 		return targets;
 	}

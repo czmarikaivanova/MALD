@@ -35,5 +35,8 @@ public class Pair<T1, T2> {
 		return "<" + v1.toString() + "," + v2.toString() + ">";
 	}
 	
+	public boolean equals(Pair<T1, T2> p) {
+		return this.getFirst().equals(p.getFirst()) && this.getSecond().equals(p.getSecond());
+	}
 	
 }
