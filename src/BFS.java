@@ -32,7 +32,7 @@ public class BFS extends Algorithm {
 					if (Math.abs(dir1) != Math.abs(dir2)) { // do not include the current node in BFS and do not consider diagonals
 						int x = loc.getX() + dir1;
 						int y = loc.getY() + dir2;
-						if (x >= 0 && x < map.getWidth() && y >= 0 && y < map.getHeight()) { // we should not get out of the map
+						if (x >= 0 && x < map.getHeight() && y >= 0 && y < map.getWidth()) { // we should not get out of the map
 							Location adjLoc = map.getLocation(x, y);
 							if (!adjLoc.isObstacle() && flags.get(adjLoc).equals(Boolean.FALSE)) { // it will not be null
 								flags.put(adjLoc, true);
@@ -78,6 +78,9 @@ public class BFS extends Algorithm {
 				Location node = loc;
 				while (!node.equals(start)) {
 					node = prevs.get(node);
+					if (node == null) {
+						System.out.println("exit");
+					}
 					dst++;
 				}
 				dists[loc.getId()] = dst;

@@ -4,50 +4,48 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
-
 	
 	static int agentCnt;
 	static int createdAgents;
+	private static FileInputStream fileInputStream;
+	private static FileOutputStream fileOutputStream;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		createdAgents = 0;
-		File input = new File("maps/arena.map");
-		File input_new = new File("maps/arena2x.map");
+		File input = new File("maps/isound1.map");
+		File input_new = new File("maps/isound1_new.map");
 		try {
 			copyFileUsingChannel(input, input_new);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		int offCnt = 8;
-		int defCnt = 6;
+		int offCnt = 20;
+		int defCnt = 10;
 		agentCnt = offCnt + defCnt;
-		int x1 = 5;
-		int y1 = 5;
-		int w1 = 5;
-		int h1 = 5;
-		int x2 = 40;
-		int y2 = 40;
-		int w2 = 5;
-		int h2 = 5;
+		int x1 = 6;
+		int y1 = 35;
+		int w1 = 10;
+		int h1 = 10;
+		int x2 = 6;
+		int y2 = 3;
+		int w2 = 50;
+		int h2 = 20;
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-		int x = 5;
-		int y = 40;
-		int w = 5;
-		int h = 5;
+		int x = 35;
+		int y = 35;
+		int w = 10;
+		int h = 10;
 		generateDeffensive(x,y,w,h,defCnt,input_new);
 		new App(input_new);	
 	}
-	
 
 	/**
 	 * generate offensive agents of specified number in a rectangle with specified placement and size
@@ -161,7 +159,13 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * check whether a list of Pairs contains an element with a corresponding content
+	 * @param list of pairs
+	 * @param p pair we are looking for
+	 * @return
+	 */
 	private static boolean containsPair(ArrayList<Pair<Integer, Integer>> list, Pair<Integer, Integer> p) {
 		for (Pair<Integer, Integer> pair: list) {
 			if (p.equals(pair)) {
@@ -171,29 +175,14 @@ public class Main {
 		return false;
 	}
 	
-	private static void copyFileUsingStream(File source, File dest) throws IOException {
-	    InputStream is = null;
-	    OutputStream os = null;
-	    try {
-	        is = new FileInputStream(source);
-	        os = new FileOutputStream(dest);
-	        byte[] buffer = new byte[1024];
-	        int length;
-	        while ((length = is.read(buffer)) > 0) {
-	            os.write(buffer, 0, length);
-	        }
-	    } finally {
-	        is.close();
-	        os.close();
-	    }
-	}
-	
 	private static void copyFileUsingChannel(File source, File dest) throws IOException {
 	    FileChannel sourceChannel = null;
 	    FileChannel destChannel = null;
 	    try {
-	        sourceChannel = new FileInputStream(source).getChannel();
-	        destChannel = new FileOutputStream(dest).getChannel();
+	        fileInputStream = new FileInputStream(source);
+			sourceChannel = fileInputStream.getChannel();
+	        fileOutputStream = new FileOutputStream(dest);
+			destChannel = fileOutputStream.getChannel();
 	        destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
 	       }finally{
 	           sourceChannel.close();

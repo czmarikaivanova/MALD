@@ -39,7 +39,6 @@ public class Map implements Iterable<Location> {
 
 	private Location[][] grid;
 	private ArrayList<Location> targets;
-	private int[][] distances;
 	private int width;
 	private int height;
 	private int locationCount;
@@ -81,13 +80,13 @@ public class Map implements Iterable<Location> {
 	
 	public String toString() {
 		String mapStr = "";
-		for (int w = 0; w < width; w++) {
-			for (int h = 0; h < width; h++) {
-				if (grid[w][h].isObstacle()) {
+		for (int h = 0; h < height; h++) {
+			for (int w = 0; w < width; w++) {
+				if (grid[h][w].isObstacle()) {
 					mapStr += "\u2588" +"|";
 				}
 				else {
-					Agent a = grid[w][h].getAgent();
+					Agent a = grid[h][w].getAgent();
 					if (a != null) {
 						mapStr += a.getTeam() + "|";
 					} else {
@@ -154,7 +153,7 @@ public class Map implements Iterable<Location> {
 
 		public Location next() {
 			if(this.hasNext()) {
-				Location currLoc = grid[cursor % width][cursor /width]; // integral division
+				Location currLoc = grid[cursor /width][cursor % width]; // integral division
 				cursor ++;
 				return currLoc;
 			}
@@ -258,15 +257,15 @@ public class Map implements Iterable<Location> {
 					width = Integer.parseInt(line.split(" ")[1]);
 				}
 				else if (line.matches("map.*")) {
-					grid = new Location[width][height];
-					for (int i = 0; i < width; i++) {
-						for (int j = 0; j < height; j++) {
-							grid[i][j] = new Location(i, j, j * width + i);
+					grid = new Location[height][width];
+					for (int i = 0; i < height; i++) {
+						for (int j = 0; j < width; j++) {
+							grid[i][j] = new Location(i, j, i * width + j);
 						}
 					}					 
-					for (int i = 0; i < width; i ++) {
+					for (int i = 0; i < height; i ++) {  // width and height are switched here, because the map has it like this and I began other way around
 						String mapLine = br.readLine();
-						for (int j = 0; j < height; j++) {
+						for (int j = 0; j < width; j++) {
 							if (mapLine.charAt(j) != Constants.TERRAIN_CHAR) {
 								grid[i][j].setObstacle();
 							}
