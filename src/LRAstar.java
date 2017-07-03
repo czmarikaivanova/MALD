@@ -12,8 +12,15 @@ public class LRAstar extends Algorithm {
 	HashMap<Location, Pair<Integer, Integer>> ghValues;
 	HashMap<Location, Location> prevs = new HashMap<Location, Location>();
 	int[] dstsToTarget;
+	Random rndGenerator;
 	
 	
+	
+	public LRAstar() {
+		super();
+		this.rndGenerator = new Random();
+	}
+
 	public LinkedList<Location> findPath(Location start, Location target, Map map) {
 		openList = new LinkedList<Location>();
 		closedList = new LinkedList<Location>();
@@ -117,8 +124,8 @@ public class LRAstar extends Algorithm {
 		LinkedList<Location> rndMove = new LinkedList<Location>();
 		ArrayList<Location> neighbors = map.neighbors(loc, true);
 		neighbors.add(loc);
-		Random rnd = new Random();
-		rndMove.add(neighbors.get(rnd.nextInt(neighbors.size())));
+		
+		rndMove.add(neighbors.get(rndGenerator.nextInt(neighbors.size())));
 		return rndMove;
 	}
 }

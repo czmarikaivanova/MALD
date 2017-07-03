@@ -2,10 +2,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 public class Team implements Iterable<Agent> {
 	private ArrayList<Agent> agents;
 	private int id;
+	private Random randomGen;
 	
 	/**
 	 * constructor
@@ -14,6 +16,7 @@ public class Team implements Iterable<Agent> {
 	public Team(int id) {
 		this.id = id;
 		agents = new ArrayList<Agent>();
+		randomGen = new Random();
 	}
 	
 	/**
@@ -98,6 +101,9 @@ public class Team implements Iterable<Agent> {
 	 * @param map
 	 */
 	public void playMove(Map map) {
+		if (id == Constants.OFFENSIVE_TEAM) {
+//			Collections.sort(agents);
+		}
 		for (Agent agent: agents) {
 			agent.makeMove(map);
 			
@@ -115,7 +121,7 @@ public class Team implements Iterable<Agent> {
 	 * @param targets
 	 */
 	public void allocateTargetsRandom(ArrayList<Location> targets) {
-		Collections.shuffle(targets);
+		Collections.shuffle(targets, randomGen);	
 		int i = 0;
 		for (Agent agent: agents) {
 			if (i >= targets.size()) {  // assign always only one target to one agent
@@ -126,6 +132,10 @@ public class Team implements Iterable<Agent> {
 		}
 	}
 
+	/**
+	 * return the numbere of agents that are currently standing at their targets
+	 * @return
+	 */
 	public int finishedCnt() {
 		int cnt = 0;
 		for (Agent a: agents) {

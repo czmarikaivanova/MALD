@@ -15,6 +15,7 @@ public class Main {
 	static int createdAgents;
 	private static FileInputStream fileInputStream;
 	private static FileOutputStream fileOutputStream;
+	private static Random rndGen;
 	/**
 	 * @param args
 	 */
@@ -27,16 +28,16 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		int offCnt = 20;
-		int defCnt = 10;
+		int offCnt = 40;
+		int defCnt = 30;
 		agentCnt = offCnt + defCnt;
-		int x1 = 6;
-		int y1 = 35;
+		int x1 = 2;
+		int y1 = 33;
 		int w1 = 10;
 		int h1 = 10;
 		int x2 = 6;
 		int y2 = 3;
-		int w2 = 50;
+		int w2 = 45;
 		int h2 = 20;
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
 		int x = 35;
@@ -65,15 +66,15 @@ public class Main {
 		Writer output;
 		output = new BufferedWriter(new FileWriter(input, true));  //clears file every time
 		ArrayList<Pair<Integer, Integer>> agentCoords = new ArrayList<Pair<Integer,Integer>>();
-		Random rnd = new Random();
+		rndGen = new Random();
 		for (int i = 0; i < defCnt; i ++) {
 			boolean hitEmpty = false;
 			int r1 = 0;
 			int r2 = 0;
 			Pair<Integer, Integer> rpair = null;
 			while (!hitEmpty) {
-				r1 = rnd.nextInt(w);
-				r2 = rnd.nextInt(h);
+				r1 = rndGen.nextInt(w);
+				r2 = rndGen.nextInt(h);
 				rpair = new Pair<Integer, Integer>(r1, r2);
 				if (!containsPair(agentCoords, rpair)) {
 					hitEmpty = true;
@@ -118,7 +119,6 @@ public class Main {
 
 		ArrayList<Pair<Integer, Integer>> agentCoords = new ArrayList<Pair<Integer,Integer>>();
 		ArrayList<Pair<Integer, Integer>> targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
-		Random rnd = new Random();
 		for (int i = 0; i < offCnt; i ++) {
 			boolean hitEmpty = false;
 			int r1 = 0;
@@ -127,8 +127,8 @@ public class Main {
 			int t2 = 0;
 			Pair<Integer, Integer> rpair = null;
 			while (!hitEmpty) {
-				r1 = rnd.nextInt(w1);
-				r2 = rnd.nextInt(h1);
+				r1 = rndGen.nextInt(w1);
+				r2 = rndGen.nextInt(h1);
 				rpair = new Pair<Integer, Integer>(r1, r2);
 				if (!containsPair(agentCoords, rpair)) {
 					hitEmpty = true;
@@ -139,8 +139,8 @@ public class Main {
 
 			Pair<Integer, Integer> tpair = null;
 			while (!hitEmpty2) {
-				t1 = rnd.nextInt(w2);
-				t2 = rnd.nextInt(h2);
+				t1 = rndGen.nextInt(w2);
+				t2 = rndGen.nextInt(h2);
 				tpair = new Pair<Integer, Integer>(t1, t2);
 				if (!containsPair(targetCoords, tpair)) {
 					hitEmpty2 = true;

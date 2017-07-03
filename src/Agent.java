@@ -1,9 +1,10 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
 
-public class Agent {
+public class Agent implements Comparable<Agent> {
 	private int id;
 	private int team;
 	private Location myCurrentLocation;
@@ -11,22 +12,26 @@ public class Agent {
 	private Location targetLocation;
 	private Algorithm algorithm;
 	private LinkedList<Location> path;
+	private Map map;
+	private int passedAstar;
 	
-	public Agent(int id, int team, Location initLocation) {
+	public Agent(int id, int team, Location initLocation, Map map) {
 		super();
 		this.id = id;
 		this.team = team;
 		this.initLocation = initLocation;
 		this.myCurrentLocation = initLocation;
+		this.map = map;
 	}
 	
-	public Agent(int id, int team, Location initLocation, Location targetLocation) {
+	public Agent(int id, int team, Location initLocation, Location targetLocation, Map map) {
 		super();
 		this.id = id;
 		this.team = team;
 		this.initLocation = initLocation;
-		this.targetLocation = targetLocation;
 		this.myCurrentLocation = initLocation;
+		this.targetLocation = targetLocation;
+		this.map = map;
 	}
 	
 	/**
@@ -59,7 +64,11 @@ public class Agent {
 			return;
 		}
 		if (path == null || path.size() == 0 || path.getFirst().getAgent() != null) {
+			passedAstar = 10;
 			path = algorithm.findPath(myCurrentLocation, targetLocation, map);
+		}
+		else {
+			passedAstar = 50;
 		}
 		Location newLoc =  path.remove();
 		makeMove(map, newLoc);
@@ -96,7 +105,6 @@ public class Agent {
 		return false;
 	}
 
-
 	/**
 	 * return the team where this agent belongs
 	 * @return
@@ -125,8 +133,10 @@ public class Agent {
 	}
 	
 	public String toString() {
-		String teamStr = team == Constants.DEFENSIVE_TEAM ? "D" : "O";
-		return id + " [" + myCurrentLocation.getX() + ", " + myCurrentLocation.getY() + "]" + teamStr; 
+//		String teamStr = team == Constants.DEFENSIVE_TEAM ? "D" : "O";   delete
+		String pathStr = (path == null ? "null" : path.toString());
+		String targetStr = (targetLocation == null ? "null" : targetLocation.toString());
+		return id + ": " + myCurrentLocation.toString() + " ###" + targetStr + "###" + pathStr + "####" + passedAstar + "\n"; 
 	}
 
 	public int getId() {
@@ -140,6 +150,12 @@ public class Agent {
 
 	public boolean atTarget() {
 		return myCurrentLocation.equals(targetLocation);
+	}
+
+	public int compareTo(Agent o) {
+		int myFreedomDeg = map.neighbors(myCurrentLocation, true).size();
+		int oFreedomeDeg = map.neighbors(o.getCurrentLocation(), true).size();
+		return Integer.compare(myFreedomDeg, oFreedomeDeg);
 	}
 	
 }

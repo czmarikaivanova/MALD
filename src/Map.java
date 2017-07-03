@@ -212,16 +212,16 @@ public class Map implements Iterable<Location> {
 						int xtarget = Integer.parseInt(xtargetS);
 						int ytarget = Integer.parseInt(ytargetS);
 						Location targetLocation = grid[xtarget][ytarget];
-						grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, targetLocation));
+						grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, targetLocation, this));
 						targets.add(targetLocation);
 					}
 					else {
-						grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, null));
+						grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, null, this));
 
 					}
 				}
 				else {
-					grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, null));
+					grid[xinit][yinit].setAgent(new Agent(id, teamId, initLocation, null, this));
 				}
 			}
 		}
@@ -285,11 +285,11 @@ public class Map implements Iterable<Location> {
 						int agentId = Integer.parseInt(agentLineSplit[0]);
 						if (agentLineSplit.length > 3) {// Offensive agents
 							Location target = grid[Integer.parseInt(agentLineSplit[3])][Integer.parseInt(agentLineSplit[4])];
-							grid[x][y].setAgent(new Agent(agentId, Constants.OFFENSIVE_TEAM, grid[x][y], target));
+							grid[x][y].setAgent(new Agent(agentId, Constants.OFFENSIVE_TEAM, grid[x][y], target, this));
 							targets.add(target);
 						}
 						else { // Defensive agents
-							grid[x][y].setAgent(new Agent(agentId, Constants.DEFENSIVE_TEAM, grid[x][y]));
+							grid[x][y].setAgent(new Agent(agentId, Constants.DEFENSIVE_TEAM, grid[x][y], this));
 						}
 					}
 				}
