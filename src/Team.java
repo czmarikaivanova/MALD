@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -16,7 +17,7 @@ public class Team implements Iterable<Agent> {
 	public Team(int id) {
 		this.id = id;
 		agents = new ArrayList<Agent>();
-		randomGen = new Random();
+		randomGen = new Random(10);
 	}
 	
 	/**
@@ -102,7 +103,8 @@ public class Team implements Iterable<Agent> {
 	 */
 	public void playMove(Map map) {
 		if (id == Constants.OFFENSIVE_TEAM) {
-//			Collections.sort(agents);
+//			Collections.sort(agents, new DegreeOfFreedomComparator(map));
+//			Collections.sort(agents, new DistanceComparator(map));
 		}
 		for (Agent agent: agents) {
 			agent.makeMove(map);
@@ -146,5 +148,38 @@ public class Team implements Iterable<Agent> {
 		return cnt;
 	}
 	
+	private  class DegreeOfFreedomComparator implements Comparator<Agent> {
+
+		private Map map;
+		
+		public int compare(Agent o1, Agent o2) {
+			int o1FreedomDeg = map.neighbors(o1.getCurrentLocation(), true).size();
+			int o2FreedomDeg = map.neighbors(o2.getCurrentLocation(), true).size();
+			return Integer.compare(o2FreedomDeg, o1FreedomDeg);
+		}
+
+		public DegreeOfFreedomComparator(Map map) {
+			super();
+			this.map = map;
+		}
+
+	}
+	
+	private  class DistanceComparator implements Comparator<Agent> {
+
+		private Map map;
+		
+		public int compare(Agent o1, Agent o2) {
+			int o1Dist = new BFS().distsToLocation(map, map.getLocation(1, 1))[o1.getId()];
+			int o2Dist = new BFS().distsToLocation(map, map.getLocation(1, 1))[o2.getId()];
+			return Integer.compare(o2Dist, o1Dist);
+		}
+
+		public DistanceComparator(Map map) {
+			super();
+			this.map = map;
+		}
+
+	}
 	
 }

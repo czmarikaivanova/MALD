@@ -18,7 +18,7 @@ public class LRAstar extends Algorithm {
 	
 	public LRAstar() {
 		super();
-		this.rndGenerator = new Random();
+		this.rndGenerator = new Random(100);
 	}
 
 	public LinkedList<Location> findPath(Location start, Location target, Map map) {

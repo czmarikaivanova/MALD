@@ -28,7 +28,7 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		int offCnt = 40;
+		int offCnt = 70;
 		int defCnt = 30;
 		agentCnt = offCnt + defCnt;
 		int x1 = 2;
@@ -39,6 +39,7 @@ public class Main {
 		int y2 = 3;
 		int w2 = 45;
 		int h2 = 20;
+		rndGen = new Random(1);
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
 		int x = 35;
 		int y = 35;
@@ -66,7 +67,6 @@ public class Main {
 		Writer output;
 		output = new BufferedWriter(new FileWriter(input, true));  //clears file every time
 		ArrayList<Pair<Integer, Integer>> agentCoords = new ArrayList<Pair<Integer,Integer>>();
-		rndGen = new Random();
 		for (int i = 0; i < defCnt; i ++) {
 			boolean hitEmpty = false;
 			int r1 = 0;

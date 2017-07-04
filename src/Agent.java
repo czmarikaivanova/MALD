@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
 
-public class Agent implements Comparable<Agent> {
+public class Agent  {
 	private int id;
 	private int team;
 	private Location myCurrentLocation;
@@ -64,11 +64,7 @@ public class Agent implements Comparable<Agent> {
 			return;
 		}
 		if (path == null || path.size() == 0 || path.getFirst().getAgent() != null) {
-			passedAstar = 10;
 			path = algorithm.findPath(myCurrentLocation, targetLocation, map);
-		}
-		else {
-			passedAstar = 50;
 		}
 		Location newLoc =  path.remove();
 		makeMove(map, newLoc);
@@ -136,7 +132,7 @@ public class Agent implements Comparable<Agent> {
 //		String teamStr = team == Constants.DEFENSIVE_TEAM ? "D" : "O";   delete
 		String pathStr = (path == null ? "null" : path.toString());
 		String targetStr = (targetLocation == null ? "null" : targetLocation.toString());
-		return id + ": " + myCurrentLocation.toString() + " ###" + targetStr + "###" + pathStr + "####" + passedAstar + "\n"; 
+		return id + ": " + myCurrentLocation.toString() + " ###" + targetStr + "###" + pathStr + "\n"; 
 	}
 
 	public int getId() {
@@ -152,10 +148,10 @@ public class Agent implements Comparable<Agent> {
 		return myCurrentLocation.equals(targetLocation);
 	}
 
-	public int compareTo(Agent o) {
-		int myFreedomDeg = map.neighbors(myCurrentLocation, true).size();
-		int oFreedomeDeg = map.neighbors(o.getCurrentLocation(), true).size();
-		return Integer.compare(myFreedomDeg, oFreedomeDeg);
-	}
+//	public int compareTo(Agent o) {
+//		int myFreedomDeg = map.neighbors(myCurrentLocation, true).size();
+//		int oFreedomDeg = map.neighbors(o.getCurrentLocation(), true).size();
+//		return Integer.compare(oFreedomDeg, myFreedomDeg);
+//	}
 	
 }
