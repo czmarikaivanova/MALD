@@ -16,6 +16,9 @@ public class Main {
 	private static FileInputStream fileInputStream;
 	private static FileOutputStream fileOutputStream;
 	private static Random rndGen;
+	
+	private static ArrayList<Pair<Integer, Integer>> agentCoords;
+	private static ArrayList<Pair<Integer, Integer>> targetCoords; 
 	/**
 	 * @param args
 	 */
@@ -33,18 +36,18 @@ public class Main {
 		agentCnt = offCnt + defCnt;
 		int x1 = 2;
 		int y1 = 33;
-		int w1 = 10;
-		int h1 = 10;
+		int w1 = 20;
+		int h1 = 20;
 		int x2 = 6;
 		int y2 = 3;
 		int w2 = 45;
 		int h2 = 20;
 		rndGen = new Random(5);
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-		int x = 35;
-		int y = 35;
-		int w = 10;
-		int h = 10;
+		int x = 2;
+		int y = 33;
+		int w = 20;
+		int h = 20;
 		generateDeffensive(x,y,w,h,defCnt,input_new);
 		new App(input_new);	
 	}
@@ -66,7 +69,7 @@ public class Main {
 		try {
 		Writer output;
 		output = new BufferedWriter(new FileWriter(input, true));  //clears file every time
-		ArrayList<Pair<Integer, Integer>> agentCoords = new ArrayList<Pair<Integer,Integer>>();
+//		ArrayList<Pair<Integer, Integer>> agentCoords = new ArrayList<Pair<Integer,Integer>>();
 		for (int i = 0; i < defCnt; i ++) {
 			boolean hitEmpty = false;
 			int r1 = 0;
@@ -117,8 +120,8 @@ public class Main {
 		output.append("Agents: \n");
 		output.append(agentCnt + "\n");
 
-		ArrayList<Pair<Integer, Integer>> agentCoords = new ArrayList<Pair<Integer,Integer>>();
-		ArrayList<Pair<Integer, Integer>> targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
+		agentCoords = new ArrayList<Pair<Integer,Integer>>();
+		targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
 		for (int i = 0; i < offCnt; i ++) {
 			boolean hitEmpty = false;
 			int r1 = 0;

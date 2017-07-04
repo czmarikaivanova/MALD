@@ -9,15 +9,17 @@ public class Team implements Iterable<Agent> {
 	private ArrayList<Agent> agents;
 	private int id;
 	private Random randomGen;
+	private Map map;
 	
 	/**
 	 * constructor
 	 * @param id
 	 */
-	public Team(int id) {
+	public Team(int id, Map map) {
 		this.id = id;
 		agents = new ArrayList<Agent>();
 		randomGen = new Random(10);
+		this.map = map;
 	}
 	
 	/**
@@ -152,8 +154,64 @@ public class Team implements Iterable<Agent> {
 			i++;
 		}
 	}
+	
+	
+	public void allocateTargetsBottlenecks(ArrayList<Location> targets) {
+		ArrayList<ArrayList<Location>> bottlenecks = findBottlenecks(3);
+		for (ArrayList<Location> bneck: bottlenecks) {
+			System.out.println(bneck.toString());
+		}
+	}
+	
+	private ArrayList<ArrayList<Location>> findBottlenecks(int size) {
+		ArrayList<ArrayList<Location>> bottleneckList = new ArrayList<ArrayList<Location>>();
+		// check rows
+		for (int i = 0; i < map.getHeight(); i++) {
+			for (int j = 1; j < map.getWidth()-size; j++) {
+				if(isEmptyWinRow(i, j, size) && map.getLocation(i, j - 1).isObstacle() && map.getLocation(i, j + size).isObstacle()) { // check for an empty sequennce of locations and whether it is surrounded by obstacles
+					ArrayList<Location> bneck = new ArrayList<Location>();
+					for (int k = 0; k < size; k++) {
+						bneck.add(map.getLocation(i, j + k));
+					}
+					bottleneckList.add(bneck);
+				}
+			}
+		}
+		// check columns
+		for (int j = 0; j < map.getWidth(); j++) {
+			for (int i = 1; i < map.getHeight()-size; i++) {
+
+				if(isEmptyWinCol(j, i, size) && map.getLocation(i - 1, j).isObstacle() && map.getLocation(i + size, j).isObstacle()) { // check for an empty sequennce of locations and whether it is surrounded by obstacles
+					ArrayList<Location> bneck = new ArrayList<Location>();
+					for (int k = 0; k < size; k++) {
+						bneck.add(map.getLocation(i + k, j));
+					}
+					bottleneckList.add(bneck);
+				}
+			}
+		}
+		return bottleneckList;
+	}
 
 
+	private boolean isEmptyWinRow(int row, int j, int size) {
+		for (int k = 0; k < size; k++) {
+			if (map.getLocation(row, j + k).isObstacle()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean isEmptyWinCol(int col, int j, int size) {
+		for (int k = 0; k < size; k++) {
+			if (map.getLocation(j + k, col).isObstacle()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	private void targetAllocValidityCheck() {
 		if (this.id == Constants.OFFENSIVE_TEAM) {
 			System.err.println("Offensive agents have determined targets");

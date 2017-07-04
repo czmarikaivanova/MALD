@@ -12,7 +12,9 @@ public class App {
 		int moveCnt = 0;
 		defAgents.allocateTargetsRandom(map.getTargets());
 //		defAgents.allocateTargetsRndOrderGreedy(map.getTargets());
+		defAgents.allocateTargetsBottlenecks(map.getTargets());
 		printState();
+		System.exit(0);
 		while (!offAgents.finished() && moveCnt < maxMoves) {
 			offAgents.playMove(map);
 			defAgents.playMove(map);
@@ -46,8 +48,8 @@ public class App {
 	}
 
 	private void createAgents() {
-		offAgents = new Team(Constants.OFFENSIVE_TEAM);
-		defAgents = new Team(Constants.DEFENSIVE_TEAM);
+		offAgents = new Team(Constants.OFFENSIVE_TEAM, map);
+		defAgents = new Team(Constants.DEFENSIVE_TEAM, map);
 		for (Location loc: map) {
 			Agent agent = loc.getAgent();
 			if (agent != null) {
