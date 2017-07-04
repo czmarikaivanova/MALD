@@ -39,7 +39,7 @@ public class Main {
 		int y2 = 3;
 		int w2 = 45;
 		int h2 = 20;
-		rndGen = new Random(1);
+		rndGen = new Random(5);
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
 		int x = 35;
 		int y = 35;

@@ -89,6 +89,8 @@ public class Map implements Iterable<Location> {
 					Agent a = grid[h][w].getAgent();
 					if (a != null) {
 						mapStr += a.getTeam() + "|";
+					} else if (grid[h][w].isSomeDestination()) {
+						mapStr += "o|";
 					} else {
 						mapStr += "_|";						
 					}
@@ -96,6 +98,10 @@ public class Map implements Iterable<Location> {
 			}
 			mapStr += "\n";
 		}
+//		mapStr += "\n TARGETS: \n";
+//		for (Location t: targets) {
+//			mapStr += t.toString() + "\n";
+//		}
 		return mapStr;
 	}
 	

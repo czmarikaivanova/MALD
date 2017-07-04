@@ -11,6 +11,7 @@ public class App {
 		initialize(input);
 		int moveCnt = 0;
 		defAgents.allocateTargetsRandom(map.getTargets());
+//		defAgents.allocateTargetsRndOrderGreedy(map.getTargets());
 		printState();
 		while (!offAgents.finished() && moveCnt < maxMoves) {
 			offAgents.playMove(map);
@@ -31,8 +32,8 @@ public class App {
 
 	private void printState() {
 		System.out.println(map.toString());
-		System.out.println(offAgents.toString());
-		System.out.println(defAgents.toString());
+//		System.out.println(offAgents.toString());
+//		System.out.println(defAgents.toString());
 	}
 
 	/**

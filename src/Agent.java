@@ -8,18 +8,15 @@ public class Agent  {
 	private int id;
 	private int team;
 	private Location myCurrentLocation;
-	private Location initLocation; // TODO: maybe remove
 	private Location targetLocation;
 	private Algorithm algorithm;
 	private LinkedList<Location> path;
 	private Map map;
-	private int passedAstar;
 	
 	public Agent(int id, int team, Location initLocation, Map map) {
 		super();
 		this.id = id;
 		this.team = team;
-		this.initLocation = initLocation;
 		this.myCurrentLocation = initLocation;
 		this.map = map;
 	}
@@ -28,7 +25,6 @@ public class Agent  {
 		super();
 		this.id = id;
 		this.team = team;
-		this.initLocation = initLocation;
 		this.myCurrentLocation = initLocation;
 		this.targetLocation = targetLocation;
 		this.map = map;
@@ -121,6 +117,7 @@ public class Agent  {
 	 * set a new target location
 	 */
 	public void setTargetLocation(Location target) {
+		target.setAgentDest(this);
 		this.targetLocation = target;
 	}
 	
@@ -132,7 +129,7 @@ public class Agent  {
 //		String teamStr = team == Constants.DEFENSIVE_TEAM ? "D" : "O";   delete
 		String pathStr = (path == null ? "null" : path.toString());
 		String targetStr = (targetLocation == null ? "null" : targetLocation.toString());
-		return id + ": " + myCurrentLocation.toString() + " ###" + targetStr + "###" + pathStr + "\n"; 
+		return id + ": " + myCurrentLocation.toString() + "| TARGET: " + targetStr + "| PATH: " + pathStr + "\n"; 
 	}
 
 	public int getId() {
@@ -148,10 +145,23 @@ public class Agent  {
 		return myCurrentLocation.equals(targetLocation);
 	}
 
-//	public int compareTo(Agent o) {
-//		int myFreedomDeg = map.neighbors(myCurrentLocation, true).size();
-//		int oFreedomDeg = map.neighbors(o.getCurrentLocation(), true).size();
-//		return Integer.compare(oFreedomDeg, myFreedomDeg);
-//	}
-	
+	/**
+	 * return the closest location from a determined set of locations to the agent
+	 * @param availableLocations - set of locations from which we want to select the closest
+	 * @return
+	 */
+	public Location getClosestLocation(ArrayList<Location> availableLocations) {
+		BFS bfs = new BFS();
+		Location closestLoc = null;
+		int[] dests = bfs.distsToLocation(map, myCurrentLocation);
+		int minDst = Constants.INFINITY;
+		for (Location t: availableLocations) {
+			if (dests[t.getId()] < minDst) {
+				minDst = dests[t.getId()];
+				closestLoc = t;
+			}
+		}
+		return closestLoc;
+	}
+
 }

@@ -13,12 +13,21 @@ public class Location {
 		this.x = x;
 		this.y = y;
 		this.id = id;
+		destinationsForAgents = new ArrayList<Agent>();
 	}
 
+	/**
+	 * get an agent currently standing at this location
+	 * @return
+	 */
 	public Agent getAgent() {
 		return agent;
 	}
 
+	/**
+	 * put an agent into this location
+	 * @param agent
+	 */
 	public void setAgent(Agent agent) {
 		if (isObstacle()) {
 			System.err.println("Adding an agent into an obstacle! " + toString());
@@ -39,22 +48,42 @@ public class Location {
 		return id;
 	}
 
+	/**
+	 * check whether this location is an obstacle
+	 * @return
+	 */
 	public boolean isObstacle() {
 		return obstacle;
 	}
 	
+	/**
+	 * set this location to be an obstacle
+	 */
 	public void setObstacle() {
 		obstacle = true;
 	}
 	
+	/**
+	 * set an agent to whom this location is a destination
+	 * @param agent
+	 */
 	public void setAgentDest(Agent agent) {
 		destinationsForAgents.add(agent);
 	}
 	
+	/**
+	 * 
+	 * @return true if this location is some agent's destination
+	 */
 	public boolean isSomeDestination() {
 		return !destinationsForAgents.isEmpty();
 	}
 	
+	/**
+	 * 
+	 * @param agent - to be checked
+	 * @return true if @param agent has this location as a destination
+	 */
 	public boolean isDestinationOf(Agent agent) {
 		return destinationsForAgents.contains(agent);
 	}

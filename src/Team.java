@@ -112,9 +112,27 @@ public class Team implements Iterable<Agent> {
 		}
 	}
 	
-	public void allocateTargets() {
+	/**
+	 * Allocate the targets to the defensive agents as follows:
+	 * for each agent in the order as the iterator returns
+	 * 		find the closest target from the list of available targets
+	 * 		assign the target to the agent and remove the target from the list of targets
+	 * 
+	 * TODO: if there is more defensive agents than targets, we should still assign something. 
+	 * 		Right now it would return null.
+	 * @param targets
+	 */
+	public void allocateTargetsRndOrderGreedy(ArrayList<Location> targets) {
+		targetAllocValidityCheck();
+		ArrayList<Location> availableTargets = new ArrayList<Location>(targets); 
 		for (Agent agent: agents) {
-			// TODO
+			if (availableTargets== null || availableTargets.size() == 0) {
+				System.err.println("No more available targets");
+				System.exit(1);
+			}
+			Location myNewTarget = agent.getClosestLocation(availableTargets);
+			agent.setTargetLocation(myNewTarget);
+			availableTargets.remove(myNewTarget);
 		}
 	}
 
@@ -123,6 +141,7 @@ public class Team implements Iterable<Agent> {
 	 * @param targets
 	 */
 	public void allocateTargetsRandom(ArrayList<Location> targets) {
+		targetAllocValidityCheck();
 		Collections.shuffle(targets, randomGen);	
 		int i = 0;
 		for (Agent agent: agents) {
@@ -134,6 +153,14 @@ public class Team implements Iterable<Agent> {
 		}
 	}
 
+
+	private void targetAllocValidityCheck() {
+		if (this.id == Constants.OFFENSIVE_TEAM) {
+			System.err.println("Offensive agents have determined targets");
+			System.exit(1);
+		}
+	}
+	
 	/**
 	 * return the numbere of agents that are currently standing at their targets
 	 * @return
@@ -149,26 +176,20 @@ public class Team implements Iterable<Agent> {
 	}
 	
 	private  class DegreeOfFreedomComparator implements Comparator<Agent> {
-
 		private Map map;
-		
 		public int compare(Agent o1, Agent o2) {
 			int o1FreedomDeg = map.neighbors(o1.getCurrentLocation(), true).size();
 			int o2FreedomDeg = map.neighbors(o2.getCurrentLocation(), true).size();
 			return Integer.compare(o2FreedomDeg, o1FreedomDeg);
 		}
-
 		public DegreeOfFreedomComparator(Map map) {
 			super();
 			this.map = map;
 		}
-
 	}
 	
 	private  class DistanceComparator implements Comparator<Agent> {
-
 		private Map map;
-		
 		public int compare(Agent o1, Agent o2) {
 			int o1Dist = new BFS().distsToLocation(map, map.getLocation(1, 1))[o1.getId()];
 			int o2Dist = new BFS().distsToLocation(map, map.getLocation(1, 1))[o2.getId()];
@@ -179,7 +200,6 @@ public class Team implements Iterable<Agent> {
 			super();
 			this.map = map;
 		}
-
 	}
-	
+
 }
