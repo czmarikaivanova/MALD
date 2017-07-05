@@ -10,9 +10,9 @@ public class App {
 	public App(File input) {
 		initialize(input);
 		int moveCnt = 0;
-		defAgents.allocateTargetsRandom(map.getTargets());
-//		defAgents.allocateTargetsRndOrderGreedy(map.getTargets());
-		defAgents.allocateTargetsBottlenecks(map.getTargets());
+		defAgents.allocateTargetsRandom();
+//		defAgents.allocateTargetsRndOrderGreedy();
+		defAgents.allocateTargetsBottlenecks();
 		printState();
 		System.exit(0);
 		while (!offAgents.finished() && moveCnt < maxMoves) {
@@ -48,8 +48,8 @@ public class App {
 	}
 
 	private void createAgents() {
-		offAgents = new Team(Constants.OFFENSIVE_TEAM, map);
-		defAgents = new Team(Constants.DEFENSIVE_TEAM, map);
+		offAgents = new Team(Constants.OFFENSIVE_TEAM, map, null);
+		defAgents = new Team(Constants.DEFENSIVE_TEAM, map, offAgents);
 		for (Location loc: map) {
 			Agent agent = loc.getAgent();
 			if (agent != null) {

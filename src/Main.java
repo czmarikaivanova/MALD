@@ -24,8 +24,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		createdAgents = 0;
-		File input = new File("maps/isound1.map");
-		File input_new = new File("maps/isound1_new.map");
+		File input = new File("maps/isound2.map");
+		File input_new = new File("maps/isound2_new.map");
 		try {
 			copyFileUsingChannel(input, input_new);
 		} catch (IOException e) {

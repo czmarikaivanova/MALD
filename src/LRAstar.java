@@ -7,18 +7,20 @@ import java.util.LinkedList;
 
 public class LRAstar extends Algorithm {
 
-	LinkedList<Location> openList;
-	LinkedList<Location> closedList;
-	HashMap<Location, Pair<Integer, Integer>> ghValues;
-	HashMap<Location, Location> prevs = new HashMap<Location, Location>();
-	int[] dstsToTarget;
-	Random rndGenerator;
+	private LinkedList<Location> openList;
+	private LinkedList<Location> closedList;
+	private HashMap<Location, Pair<Integer, Integer>> ghValues;
+	private HashMap<Location, Location> prevs = new HashMap<Location, Location>();
+	private int[] dstsToTarget;
+	private Random rndGenerator;
+	private boolean firstEmpty;
 	
 	
 	
-	public LRAstar() {
+	public LRAstar(boolean firstEmpty) {
 		super();
 		this.rndGenerator = new Random(100);
+		this.firstEmpty = firstEmpty;
 	}
 
 	public LinkedList<Location> findPath(Location start, Location target, Map map) {
@@ -26,7 +28,7 @@ public class LRAstar extends Algorithm {
 		closedList = new LinkedList<Location>();
 		ghValues = new HashMap<Location, Pair<Integer,Integer>>();
 		prevs = new HashMap<Location, Location>();
-		dstsToTarget = new BFS().distsToLocation(map, target);
+		dstsToTarget = new BFS(Constants.CONSIDER_AGENTS_NONE).distsToLocation(map, target);
 		for (Location loc: map) {
 			int dst = dstsToTarget[loc.getId()];
 			ghValues.put(loc, new Pair<Integer, Integer>(Constants.INFINITY, dst));
@@ -36,7 +38,7 @@ public class LRAstar extends Algorithm {
 		int tms = 0;
 		while (!openList.isEmpty()) {
 			Location q = extractMin();
-			ArrayList<Location> neighbours = map.neighbors(q, tms == 0);
+			ArrayList<Location> neighbours = map.neighbors(q, tms == 0 && firstEmpty);
 			for (Location neighbour: neighbours) {
 				if (neighbour.equals(target)) {
 					prevs.put(target, q);

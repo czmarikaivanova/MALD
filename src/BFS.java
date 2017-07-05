@@ -4,8 +4,15 @@ import java.util.LinkedList;
 
 public class BFS extends Algorithm {
 
-	HashMap<Location, Boolean> flags = new HashMap<Location, Boolean>();
-	HashMap<Location, Location> prevs = new HashMap<Location, Location>();
+	private HashMap<Location, Boolean> flags = new HashMap<Location, Boolean>(); // already visited
+	private HashMap<Location, Location> prevs = new HashMap<Location, Location>();
+	private int considerObstacles;
+	
+	
+	public BFS(int considerObstacles) {
+		super();
+		this.considerObstacles = considerObstacles;
+	}
 	
 	@Override
 	public LinkedList<Location> findPath(Location start, Location target, Map map) {
