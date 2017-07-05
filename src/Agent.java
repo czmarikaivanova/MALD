@@ -151,7 +151,7 @@ public class Agent  {
 	 * @return
 	 */
 	public Location getClosestLocation(ArrayList<Location> availableLocations) {
-		BFS bfs = new BFS();
+		BFS bfs = new BFS(Constants.CONSIDER_AGENTS_NONE);
 		Location closestLoc = null;
 		int[] dests = bfs.distsToLocation(map, myCurrentLocation);
 		int minDst = Constants.INFINITY;

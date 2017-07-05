@@ -24,8 +24,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		createdAgents = 0;
-		File input = new File("maps/isound2.map");
-		File input_new = new File("maps/isound2_new.map");
+		File input = new File("maps/isound3.map");
+		File input_new = new File("maps/isound3_new.map");
 		try {
 			copyFileUsingChannel(input, input_new);
 		} catch (IOException e) {
@@ -38,9 +38,9 @@ public class Main {
 		int y1 = 33;
 		int w1 = 20;
 		int h1 = 20;
-		int x2 = 6;
-		int y2 = 3;
-		int w2 = 45;
+		int x2 = 33;
+		int y2 = 33;
+		int w2 = 20;
 		int h2 = 20;
 		rndGen = new Random(5);
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
