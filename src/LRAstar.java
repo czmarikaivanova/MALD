@@ -44,22 +44,24 @@ public class LRAstar extends Algorithm {
 					prevs.put(target, q);
 					return constructPath(map, start, target);
 				}
-				int distanceToMinNode = ghValues.get(q).getFirst();
-				int n_g = distanceToMinNode + 1;
-				int n_h = dstsToTarget[neighbour.getId()];
-				ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, n_h));
-				 
-                 int alt = n_g + ghValues.get(neighbour).getSecond();
-                 int fValofN = ghValues.get(neighbour).getFirst() + ghValues.get(neighbour).getSecond();
-                 if (openList.contains(neighbour) && fValofN <= alt) {
-                     continue;
-                 }                        
-                 if (closedList.contains(neighbour) && fValofN <= alt) {
-                     continue;
-                 }
-                 ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, dstsToTarget[neighbour.getId()]));
-                 openList.add(neighbour);
-                 prevs.put(neighbour, q);
+				if (neighbour.getAgent() == null || neighbour.getAgent().getTeam() == start.getAgent().getTeam() && !neighbour.isSomeDestination()) {
+					int distanceToMinNode = ghValues.get(q).getFirst();
+					int n_g = distanceToMinNode + 1;
+					int n_h = dstsToTarget[neighbour.getId()];
+					ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, n_h));
+					 
+	                 int alt = n_g + ghValues.get(neighbour).getSecond();
+	                 int fValofN = ghValues.get(neighbour).getFirst() + ghValues.get(neighbour).getSecond();
+	                 if (openList.contains(neighbour) && fValofN <= alt) {
+	                     continue;
+	                 }                        
+	                 if (closedList.contains(neighbour) && fValofN <= alt) {
+	                     continue;
+	                 }
+	                 ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, dstsToTarget[neighbour.getId()]));
+	                 openList.add(neighbour);
+	                 prevs.put(neighbour, q);
+				}
 			}
 			closedList.add(q);
 			tms++;

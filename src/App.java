@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 
 public class App {
 	private Map map;
@@ -11,7 +12,8 @@ public class App {
 		int moveCnt = 0;
 //		defAgents.allocateTargetsRandom();
 //		defAgents.allocateTargetsRndOrderGreedy();
-		defAgents.allocateTargetsBottlenecks();
+		ArrayList<ArrayList<Location>> bottlenecks = findBottlenecks(3);
+		defAgents.allocateTargetsBottlenecks(bottlenecks);
 		printState();
 //		System.exit(0);
 		while (!offAgents.finished() && moveCnt < maxMoves) {
@@ -33,8 +35,8 @@ public class App {
 
 	private void printState() {
 		System.out.println(map.toString());
-		System.out.println(offAgents.toString());
-		System.out.println(defAgents.toString());
+//		System.out.println(offAgents.toString());
+//		System.out.println(defAgents.toString());
 	}
 
 	/**
@@ -62,5 +64,57 @@ public class App {
 		}
 	}
 
-	
+	/**
+	 * find bottleneck of a specified width
+	 * @param width - specified width
+	 * @return - list of bottlenecks of the specified width
+	 */
+	private ArrayList<ArrayList<Location>> findBottlenecks(int width) {
+		ArrayList<ArrayList<Location>> bottleneckList = new ArrayList<ArrayList<Location>>();
+		// check rows
+		for (int i = 0; i < map.getHeight(); i++) {
+			for (int j = 1; j < map.getWidth()-width; j++) {
+				if(isEmptyWinRow(i, j, width) && map.getLocation(i, j - 1).isObstacle() && map.getLocation(i, j + width).isObstacle()) { // check for an empty sequennce of locations and whether it is surrounded by obstacles
+					ArrayList<Location> bneck = new ArrayList<Location>();
+					for (int k = 0; k < width; k++) {
+						bneck.add(map.getLocation(i, j + k));
+					}
+					bottleneckList.add(bneck);
+				}
+			}
+		}
+		// check columns
+		for (int j = 0; j < map.getWidth(); j++) {
+			for (int i = 1; i < map.getHeight()-width; i++) {
+
+				if(isEmptyWinCol(j, i, width) && map.getLocation(i - 1, j).isObstacle() && map.getLocation(i + width, j).isObstacle()) { // check for an empty sequennce of locations and whether it is surrounded by obstacles
+					ArrayList<Location> bneck = new ArrayList<Location>();
+					for (int k = 0; k < width; k++) {
+						bneck.add(map.getLocation(i + k, j));
+					}
+					bottleneckList.add(bneck);
+				}
+			}
+		}
+		return bottleneckList;
+	}
+
+
+	private boolean isEmptyWinRow(int row, int j, int size) {
+		for (int k = 0; k < size; k++) {
+			if (map.getLocation(row, j + k).isObstacle()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean isEmptyWinCol(int col, int j, int size) {
+		for (int k = 0; k < size; k++) {
+			if (map.getLocation(j + k, col).isObstacle()) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
