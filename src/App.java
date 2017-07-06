@@ -13,11 +13,13 @@ public class App {
 //		defAgents.allocateTargetsRandom();
 //		defAgents.allocateTargetsRndOrderGreedy();
 		ArrayList<ArrayList<Location>> bottlenecks = findBottlenecks(3);
-		defAgents.allocateTargetsBottlenecks(bottlenecks);
+
 		printState();
 //		System.exit(0);
 		while (!offAgents.finished() && moveCnt < maxMoves) {
+			
 			offAgents.playMove(map);
+			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
 			defAgents.playMove(map);
 			printState();
 			moveCnt++;
@@ -30,7 +32,6 @@ public class App {
 			int finishedCnt = offAgents.finishedCnt();
 			System.out.println("###" + finishedCnt + " agents reached their destination");
 		}
-
 	}
 
 	private void printState() {

@@ -169,10 +169,21 @@ public class Team implements Iterable<Agent> {
 	/**
 	 * Assign targets to defending agents according to frequently used bottlenecks found in the map
 	 */
-	public void allocateTargetsBottlenecks(ArrayList<ArrayList<Location>> bottlenecks ) {
+	public void allocateTargetsBottlenecks(ArrayList<ArrayList<Location>> bottlenecks, boolean reallocate, int considerAgents) {
 		targetAllocValidityCheck();
-		ArrayList<Agent> agentsToAllocate = new ArrayList<Agent>(agents);
-		ArrayList<ArrayList<Location>> paths = estimatePaths();
+		ArrayList<Agent> agentsToAllocate;
+		if (reallocate) {
+			agentsToAllocate = new ArrayList<Agent>(agents);
+		}
+		else {
+			agentsToAllocate = new ArrayList<Agent>();
+			for (Agent a: agents) {
+				if (!a.atTarget()) {
+					agentsToAllocate.add(a);
+				}
+			}
+		}
+		ArrayList<ArrayList<Location>> paths = estimatePaths(considerAgents);
 		HashMap<ArrayList<Location>, Integer> bottleneckPassFreqs = new HashMap<ArrayList<Location>, Integer>(); 
 		for (ArrayList<Location> bneck: bottlenecks) {
 			bottleneckPassFreqs.put(bneck, 0);
@@ -234,12 +245,12 @@ public class Team implements Iterable<Agent> {
 	 * randomly assign targets to offensive agents and calculate shortest paths
 	 * @return
 	 */
-	private ArrayList<ArrayList<Location>> estimatePaths() {
+	private ArrayList<ArrayList<Location>> estimatePaths(int considerAgents) {
 		ArrayList<ArrayList<Location>> paths = new ArrayList<ArrayList<Location>>();
 		ArrayList<Location> targets = map.getTargets();
 		for (Agent a : otherTeam) {
 			Location t = targets.get(a.getId());  // guess a target by id
-			LinkedList<Location> path = new BFS(Constants.CONSIDER_AGENTS_NONE).findPath(a.getCurrentLocation(), t, map); 
+			LinkedList<Location> path = new BFS(considerAgents).findPath(a.getCurrentLocation(), t, map); 
 			paths.add(new ArrayList<Location>(path));
 		}
 		return paths;

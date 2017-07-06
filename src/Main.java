@@ -31,8 +31,8 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		int offCnt = 70;
-		int defCnt = 30;
+		int offCnt = 30;
+		int defCnt = 15;
 		agentCnt = offCnt + defCnt;
 		int x1 = 2;
 		int y1 = 33;

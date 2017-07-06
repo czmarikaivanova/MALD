@@ -26,7 +26,7 @@ public class Agent  {
 		this.id = id;
 		this.team = team;
 		this.myCurrentLocation = initLocation;
-		this.targetLocation = targetLocation;
+		setTargetLocation(targetLocation);
 		this.map = map;
 	}
 	
@@ -60,6 +60,9 @@ public class Agent  {
 			return;
 		}
 		if (path == null || path.size() == 0 || path.getFirst().getAgent() != null) {
+			if (id == 23) {
+				System.out.println("suspicious");
+			}
 			path = algorithm.findPath(myCurrentLocation, targetLocation, map);
 		}
 		Location newLoc =  path.remove();

@@ -6,12 +6,12 @@ public class BFS extends Algorithm {
 
 	private HashMap<Location, Boolean> flags = new HashMap<Location, Boolean>(); // already visited
 	private HashMap<Location, Location> prevs = new HashMap<Location, Location>();
-	private int considerObstacles;
+	private int considerAgents;
 	
 	
-	public BFS(int considerObstacles) {
+	public BFS(int considerAgents) {
 		super();
-		this.considerObstacles = considerObstacles;
+		this.considerAgents = considerAgents;
 	}
 	
 	@Override
@@ -36,16 +36,21 @@ public class BFS extends Algorithm {
 			Location loc = queue.remove();
 			ArrayList<Location> neighbours = map.neighbors(loc, false);
 			for (Location adjLoc: neighbours) {
-				if (!adjLoc.isObstacle() && flags.get(adjLoc).equals(Boolean.FALSE) ) { // it will not be null
-					flags.put(adjLoc, true);
-					prevs.put(adjLoc, loc);
-					queue.add(adjLoc);
+				if (!adjLoc.isObstacle() && flags.get(adjLoc).equals(Boolean.FALSE)  ) { // it will not be null
+					if (adjLoc.getAgent() == null || considerAgents == Constants.CONSIDER_AGENTS_NONE || (considerAgents == Constants.CONSIDER_AGENTS_OPPONENT) && start.getAgent().getTeam() == adjLoc.getAgent().getTeam()) {
+							flags.put(adjLoc, true);
+							prevs.put(adjLoc, loc);
+							queue.add(adjLoc);
+					}
 				}
 			}
 		}
 		if (target != null) {
 			Location loc = target;			// retrieve the next location
 			Location prevLoc = prevs.get(loc); // has to exist, because the case where the agent has reached the target is treated at the beginning
+			if (prevLoc == null) { // no path found
+				return new LinkedList<Location>(); // should be empty
+			}
 			while (!prevLoc.equals(start)) {
 				loc = prevLoc;
 				path.add(0, loc); // add next location to the beginning
