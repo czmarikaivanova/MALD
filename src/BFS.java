@@ -34,20 +34,12 @@ public class BFS extends Algorithm {
 		flags.put(start, true);
 		while (!queue.isEmpty()) { // BFS SEARCH
 			Location loc = queue.remove();
-			for (int dir1 = -1; dir1 <= 1; dir1++) {
-				for (int dir2 = -1; dir2 <= 1; dir2++) {
-					if (Math.abs(dir1) != Math.abs(dir2)) { // do not include the current node in BFS and do not consider diagonals
-						int x = loc.getX() + dir1;
-						int y = loc.getY() + dir2;
-						if (x >= 0 && x < map.getHeight() && y >= 0 && y < map.getWidth()) { // we should not get out of the map
-							Location adjLoc = map.getLocation(x, y);
-							if (!adjLoc.isObstacle() && flags.get(adjLoc).equals(Boolean.FALSE)) { // it will not be null
-								flags.put(adjLoc, true);
-								prevs.put(adjLoc, loc);
-								queue.add(adjLoc);
-							}
-						}
-					}
+			ArrayList<Location> neighbours = map.neighbors(loc, false);
+			for (Location adjLoc: neighbours) {
+				if (!adjLoc.isObstacle() && flags.get(adjLoc).equals(Boolean.FALSE) ) { // it will not be null
+					flags.put(adjLoc, true);
+					prevs.put(adjLoc, loc);
+					queue.add(adjLoc);
 				}
 			}
 		}

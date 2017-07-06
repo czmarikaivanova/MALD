@@ -122,7 +122,7 @@ public class Map implements Iterable<Location> {
 				if (Math.abs(dir1) != Math.abs(dir2)) { // do not include the current node in BFS and do not consider diagonals
 					int x = loc.getX() + dir1;
 					int y = loc.getY() + dir2;
-					if (x >= 0 && x < width && y >= 0 && y < height) { // we should not get out of the map
+					if (x >= 0 && x < height && y >= 0 && y < width) { // we should not get out of the map
 						Location adjLoc = getLocation(x, y);
 						if (!adjLoc.isObstacle() && (!onlyEmpty || (adjLoc.getAgent() == null))) { // it will not be null
 							neighbours.add(adjLoc);
