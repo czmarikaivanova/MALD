@@ -1,4 +1,8 @@
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 
 public class App {
@@ -9,13 +13,13 @@ public class App {
 	
 	public App(File input) {
 		initialize(input);
+		File outputFile = initOutputFile();
 		int moveCnt = 0;
 //		defAgents.allocateTargetsRandom();
 //		defAgents.allocateTargetsRndOrderGreedy();
 		ArrayList<ArrayList<Location>> bottlenecks = findBottlenecks(3);
-
 		printState();
-//		System.exit(0);
+		System.exit(0);
 		while (!offAgents.finished() && moveCnt < maxMoves) {
 			
 			offAgents.playMove(map);
@@ -117,5 +121,23 @@ public class App {
 			}
 		}
 		return true;
+	}
+	
+	private File initOutputFile() {
+		File f = new File("output/output" + new File("output/").listFiles().length + ".txt" );
+		
+		try {
+			f.createNewFile();
+			Writer output = new BufferedWriter(new FileWriter(f, true));
+			output.write("# tms \t at_target \t ");
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return f; 
+	}
+	
+	private void updateOutput(File f) {
+		
 	}
 }
