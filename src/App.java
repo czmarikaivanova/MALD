@@ -11,6 +11,7 @@ public class App {
 	private Team defAgents;
 	private int maxMoves = 100;
 	
+	
 	public App(File input) {
 		initialize(input);
 		File outputFile = initOutputFile();
@@ -19,9 +20,8 @@ public class App {
 //		defAgents.allocateTargetsRndOrderGreedy();
 		ArrayList<ArrayList<Location>> bottlenecks = findBottlenecks(3);
 		printState();
-		System.exit(0);
 		while (!offAgents.finished() && moveCnt < maxMoves) {
-			
+			updateOutput(outputFile, moveCnt, offAgents.finishedCnt());
 			offAgents.playMove(map);
 			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
 			defAgents.playMove(map);
@@ -124,12 +124,12 @@ public class App {
 	}
 	
 	private File initOutputFile() {
-		File f = new File("output/output" + new File("output/").listFiles().length + ".txt" );
+		File f = new File("output/output" + new File("output/").listFiles().length + ".data" );
 		
 		try {
 			f.createNewFile();
 			Writer output = new BufferedWriter(new FileWriter(f, true));
-			output.write("# tms \t at_target \t ");
+			output.write("# tms \t at_target \n");
 			output.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -137,7 +137,13 @@ public class App {
 		return f; 
 	}
 	
-	private void updateOutput(File f) {
-		
+	private void updateOutput(File f, int tms, int atTarget) {
+		try {
+			Writer output = new BufferedWriter(new FileWriter(f, true));
+			output.write(tms +"\t"+ atTarget + "\n");
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
