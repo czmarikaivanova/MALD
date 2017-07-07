@@ -102,5 +102,12 @@ public class Location {
 		return false;
 	}
 	
+	
+	public boolean equals(Location loc) {
+		if (loc == null) {
+			return false;
+		}
+		return (loc.x == this.x) && (loc.y == this.y);
+	}
 
 }

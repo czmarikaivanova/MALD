@@ -1,8 +1,9 @@
+
 import java.util.ArrayList;
 
 public class RandomOrderGreedyStrategy extends Strategy {
 
-	private ArrayList<Location> targets;
+
 	
 	public RandomOrderGreedyStrategy() {
 		super();
@@ -19,10 +20,10 @@ public class RandomOrderGreedyStrategy extends Strategy {
 	 * @param targets
 	 */
 	@Override
-	public void allocateTargets(Map map, Team team, boolean reallocate, int considerAgents) {
+	public void allocateTargets(Map map, Team defTeam, Team ofTeam, boolean reallocate, int considerAgents) {
 		targets = map.getTargets();
 		ArrayList<Location> availableTargets = new ArrayList<Location>(targets); 
-		for (Agent agent: team) {
+		for (Agent agent: defTeam) {
 			if (availableTargets== null || availableTargets.size() == 0) {
 				System.err.println("No more available targets");
 				System.exit(1);

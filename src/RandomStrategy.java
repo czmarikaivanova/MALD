@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -5,7 +6,6 @@ import java.util.Random;
 public class RandomStrategy extends Strategy {
 
 	private Random randomGen;
-	private ArrayList<Location> targets;
 	
 	public RandomStrategy() {
 		super();
@@ -17,11 +17,11 @@ public class RandomStrategy extends Strategy {
 	 * @param targets
 	 */
 	@Override
-	public void allocateTargets(Map map, Team team, boolean reallocate, int considerAgents) {
+	public void allocateTargets(Map map, Team defTeam, Team offTeam, boolean reallocate, int considerAgents) {
 		targets = map.getTargets();
 		Collections.shuffle(targets, randomGen);	
 		int i = 0;
-		for (Agent agent: team) {
+		for (Agent agent: defTeam) {
 			if (i >= targets.size()) {  // assign always only one target to one agent
 				return;
 			}

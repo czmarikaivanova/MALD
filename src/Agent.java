@@ -132,7 +132,8 @@ public class Agent  {
 //		String teamStr = team == Constants.DEFENSIVE_TEAM ? "D" : "O";   delete
 		String pathStr = (path == null ? "null" : path.toString());
 		String targetStr = (targetLocation == null ? "null" : targetLocation.toString());
-		return id + ": " + myCurrentLocation.toString() + "| TARGET: " + targetStr + "| PATH: " + pathStr + "\n"; 
+//		return id + ": " + myCurrentLocation.toString() + "| TARGET: " + targetStr + "| PATH: " + pathStr + "\n"; 
+		return id + ": " + myCurrentLocation.toString() + "| TARGET: " + targetStr + "\n"; 
 	}
 
 	public int getId() {

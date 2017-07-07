@@ -34,12 +34,19 @@ public class BFS extends Algorithm {
 		flags.put(start, true);
 		while (!queue.isEmpty()) { // BFS SEARCH
 			Location loc = queue.remove();
+			if (loc == null) {
+				System.out.println("Removed a null location from the queue");
+			}
 			ArrayList<Location> neighbours = map.neighbors(loc, false);
 			for (Location adjLoc: neighbours) {
+				if (adjLoc == null) {
+					System.out.println("adjLoc = null");
+				}
 				if (!adjLoc.isObstacle() && flags.get(adjLoc).equals(Boolean.FALSE)  ) { // it will not be null
 					if (adjLoc.getAgent() == null || considerAgents == Constants.CONSIDER_AGENTS_NONE || (considerAgents == Constants.CONSIDER_AGENTS_OPPONENT) && start.getAgent().getTeam() == adjLoc.getAgent().getTeam()) {
 							flags.put(adjLoc, true);
 							prevs.put(adjLoc, loc);
+							
 							queue.add(adjLoc);
 					}
 				}

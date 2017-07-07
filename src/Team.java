@@ -124,92 +124,92 @@ public class Team implements Iterable<Agent> {
 	/**
 	 * Assign targets to defending agents according to frequently used bottlenecks found in the map
 	 */
-	public void allocateTargetsBottlenecks(ArrayList<ArrayList<Location>> bottlenecks, boolean reallocate, int considerAgents) {
-		targetAllocValidityCheck();
-		ArrayList<Agent> agentsToAllocate;
-		if (reallocate) {
-			agentsToAllocate = new ArrayList<Agent>(agents);
-		}
-		else {
-			agentsToAllocate = new ArrayList<Agent>();
-			for (Agent a: agents) {
-				if (!a.atTarget()) {
-					agentsToAllocate.add(a);
-				}
-			}
-		}
-		ArrayList<ArrayList<Location>> paths = estimatePaths(considerAgents);
-		HashMap<ArrayList<Location>, Integer> bottleneckPassFreqs = new HashMap<ArrayList<Location>, Integer>(); 
-		for (ArrayList<Location> bneck: bottlenecks) {
-			bottleneckPassFreqs.put(bneck, 0);
-			for (ArrayList<Location> path : paths) {
-				ArrayList<Location> intersect = (ArrayList<Location>) bneck.stream().filter(path::contains).collect(Collectors.toList()); // find an intersection of two lists
-				if (!intersect.isEmpty()) {
-					bottleneckPassFreqs.replace(bneck, bottleneckPassFreqs.get(bneck) + 1);
-				}
-			}
-		}
-		ArrayList<Location> bottleneck;
-		while((bottleneck = getBottleNeckOfFreq(bottleneckPassFreqs, 10)) != null) {
-			if (agentsToAllocate.size() < bottleneck.size()) {
-				break; // while
-			}
-			assignBottleneck(bottleneck, agentsToAllocate); // items in agentsToAllocate are removed inside this call
-			bottleneckPassFreqs.remove(bottleneck);
-		}
-		if (!agentsToAllocate.isEmpty()) {
-//			allocateTargetsRandom();
-		}
-		for (ArrayList<Location> bneck: bottlenecks) {
-			System.out.println(bneck.toString() + " paths : " + bottleneckPassFreqs.get(bneck));
-		}
-	}
+//	public void allocateTargetsBottlenecks(ArrayList<ArrayList<Location>> bottlenecks, boolean reallocate, int considerAgents) {
+//		targetAllocValidityCheck();
+//		ArrayList<Agent> agentsToAllocate;
+//		if (reallocate) {
+//			agentsToAllocate = new ArrayList<Agent>(agents);
+//		}
+//		else {
+//			agentsToAllocate = new ArrayList<Agent>();
+//			for (Agent a: agents) {
+//				if (!a.atTarget()) {
+//					agentsToAllocate.add(a);
+//				}
+//			}
+//		}
+//		ArrayList<ArrayList<Location>> paths = estimatePaths(considerAgents);
+//		HashMap<ArrayList<Location>, Integer> bottleneckPassFreqs = new HashMap<ArrayList<Location>, Integer>(); 
+//		for (ArrayList<Location> bneck: bottlenecks) {
+//			bottleneckPassFreqs.put(bneck, 0);
+//			for (ArrayList<Location> path : paths) {
+//				ArrayList<Location> intersect = (ArrayList<Location>) bneck.stream().filter(path::contains).collect(Collectors.toList()); // find an intersection of two lists
+//				if (!intersect.isEmpty()) {
+//					bottleneckPassFreqs.replace(bneck, bottleneckPassFreqs.get(bneck) + 1);
+//				}
+//			}
+//		}
+//		ArrayList<Location> bottleneck;
+//		while((bottleneck = getBottleNeckOfFreq(bottleneckPassFreqs, 10)) != null) {
+//			if (agentsToAllocate.size() < bottleneck.size()) {
+//				break; // while
+//			}
+//			assignBottleneck(bottleneck, agentsToAllocate); // items in agentsToAllocate are removed inside this call
+//			bottleneckPassFreqs.remove(bottleneck);
+//		}
+//		if (!agentsToAllocate.isEmpty()) {
+////			allocateTargetsRandom();
+//		}
+//		for (ArrayList<Location> bneck: bottlenecks) {
+//			System.out.println(bneck.toString() + " paths : " + bottleneckPassFreqs.get(bneck));
+//		}
+//	}
 	
-	/**
-	 * Assign locations of a specified bottleneck to appropriate agents that still haven't been allocated
-	 * @param bottleneck - locations to be assinged
-	 * @param agentsToAllocate agents that still haven't been allocated and can be used
-	 */
-	private void assignBottleneck(ArrayList<Location> bottleneck, ArrayList<Agent> agentsToAllocate) {
-		for(Location b: bottleneck) {
-			Collections.sort(agentsToAllocate, new DistToLocationComparator(map, b)); // can be faster by placing in front of cycle, with a minor loss of accuracy
-			Agent a = agentsToAllocate.remove(0);
-			a.setTargetLocation(b);
-		}
-	}
-
-	/**
-	 * Get a bottleneck
-	 * @param bottleneckPassFreqs
-	 * @param f
-	 * @return
-	 */
-	private ArrayList<Location> getBottleNeckOfFreq(HashMap<ArrayList<Location>, Integer> bottleneckPassFreqs, int f) {
-		Iterator it = bottleneckPassFreqs.entrySet().iterator();
-		while(it.hasNext()) {
-			HashMap.Entry pair = (HashMap.Entry) it.next();
-			int realF = (int) pair.getValue();
-			if (realF > f) {
-				return (ArrayList<Location>) pair.getKey();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * randomly assign targets to offensive agents and calculate shortest paths
-	 * @return
-	 */
-	private ArrayList<ArrayList<Location>> estimatePaths(int considerAgents) {
-		ArrayList<ArrayList<Location>> paths = new ArrayList<ArrayList<Location>>();
-		ArrayList<Location> targets = map.getTargets();
-		for (Agent a : otherTeam) {
-			Location t = targets.get(a.getId());  // guess a target by id
-			LinkedList<Location> path = new BFS(considerAgents).findPath(a.getCurrentLocation(), t, map); 
-			paths.add(new ArrayList<Location>(path));
-		}
-		return paths;
-	}
+//	/**
+//	 * Assign locations of a specified bottleneck to appropriate agents that still haven't been allocated
+//	 * @param bottleneck - locations to be assinged
+//	 * @param agentsToAllocate agents that still haven't been allocated and can be used
+//	 */
+//	private void assignBottleneck(ArrayList<Location> bottleneck, ArrayList<Agent> agentsToAllocate) {
+//		for(Location b: bottleneck) {
+//			Collections.sort(agentsToAllocate, new DistToLocationComparator(map, b)); // can be faster by placing in front of cycle, with a minor loss of accuracy
+//			Agent a = agentsToAllocate.remove(0);
+//			a.setTargetLocation(b);
+//		}
+//	}
+//
+//	/**
+//	 * Get a bottleneck
+//	 * @param bottleneckPassFreqs
+//	 * @param f
+//	 * @return
+//	 */
+//	private ArrayList<Location> getBottleNeckOfFreq(HashMap<ArrayList<Location>, Integer> bottleneckPassFreqs, int f) {
+//		Iterator it = bottleneckPassFreqs.entrySet().iterator();
+//		while(it.hasNext()) {
+//			HashMap.Entry pair = (HashMap.Entry) it.next();
+//			int realF = (int) pair.getValue();
+//			if (realF > f) {
+//				return (ArrayList<Location>) pair.getKey();
+//			}
+//		}
+//		return null;
+//	}
+//
+//	/**
+//	 * randomly assign targets to offensive agents and calculate shortest paths
+//	 * @return
+//	 */
+//	private ArrayList<ArrayList<Location>> estimatePaths(int considerAgents) {
+//		ArrayList<ArrayList<Location>> paths = new ArrayList<ArrayList<Location>>();
+//		ArrayList<Location> targets = map.getTargets();
+//		for (Agent a : otherTeam) {
+//			Location t = targets.get(a.getId());  // guess a target by id
+//			LinkedList<Location> path = new BFS(considerAgents).findPath(a.getCurrentLocation(), t, map); 
+//			paths.add(new ArrayList<Location>(path));
+//		}
+//		return paths;
+//	}
 
 
 	
@@ -266,30 +266,30 @@ public class Team implements Iterable<Agent> {
 		}
 	}
 	
-	/**
-	 * Compares two agents accordint to their distance to a specified location
-	 * @author marika
-	 *
-	 */
-	private class DistToLocationComparator implements Comparator<Agent> {
-		BFS bfs;
-		Map map;
-		Location loc;
-		
-		public DistToLocationComparator(Map map, Location loc) {
-			super();
-			this.map = map;
-			this.loc = loc;
-			bfs = new BFS(Constants.CONSIDER_AGENTS_NONE);
-		}
-
-		@Override
-		public int compare(Agent o1, Agent o2) {
-			int d1 = bfs.minPathLength(o1.getCurrentLocation(), loc, map);
-			int d2 = bfs.minPathLength(o2.getCurrentLocation(), loc, map);
-			return Integer.compare(d1, d2);
-		}
-		
-	}
+//	/**
+//	 * Compares two agents accordint to their distance to a specified location
+//	 * @author marika
+//	 *
+//	 */
+//	private class DistToLocationComparator implements Comparator<Agent> {
+//		BFS bfs;
+//		Map map;
+//		Location loc;
+//		
+//		public DistToLocationComparator(Map map, Location loc) {
+//			super();
+//			this.map = map;
+//			this.loc = loc;
+//			bfs = new BFS(Constants.CONSIDER_AGENTS_NONE);
+//		}
+//
+//		@Override
+//		public int compare(Agent o1, Agent o2) {
+//			int d1 = bfs.minPathLength(o1.getCurrentLocation(), loc, map);
+//			int d2 = bfs.minPathLength(o2.getCurrentLocation(), loc, map);
+//			return Integer.compare(d1, d2);
+//		}
+//		
+//	}
 
 }

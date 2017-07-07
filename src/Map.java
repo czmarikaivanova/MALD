@@ -120,6 +120,9 @@ public class Map implements Iterable<Location> {
 		for (int dir1 = -1; dir1 <= 1; dir1++) {
 			for (int dir2 = -1; dir2 <= 1; dir2++) {
 				if (Math.abs(dir1) != Math.abs(dir2)) { // do not include the current node in BFS and do not consider diagonals
+					if (loc == null) {
+						System.out.println("loc null");
+					}
 					int x = loc.getX() + dir1;
 					int y = loc.getY() + dir2;
 					if (x >= 0 && x < height && y >= 0 && y < width) { // we should not get out of the map
