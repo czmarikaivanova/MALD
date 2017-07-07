@@ -8,6 +8,16 @@ public class RandomOrderGreedyStrategy extends Strategy {
 		super();
 	}
 	
+	/**
+	 * Allocate the targets to the defensive agents as follows:
+	 * for each agent in the order as the iterator returns
+	 * 		find the closest target from the list of available targets
+	 * 		assign the target to the agent and remove the target from the list of targets
+	 * 
+	 * TODO: if there is more defensive agents than targets, we should still assign something. 
+	 * 		Right now it would return null.
+	 * @param targets
+	 */
 	@Override
 	public void allocateTargets(Map map, Team team, boolean reallocate, int considerAgents) {
 		targets = map.getTargets();

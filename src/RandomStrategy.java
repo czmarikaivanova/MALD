@@ -12,6 +12,10 @@ public class RandomStrategy extends Strategy {
 		randomGen = new Random(10);
 	}
 	
+	/**
+	 * allocate targets to agents randomly
+	 * @param targets
+	 */
 	@Override
 	public void allocateTargets(Map map, Team team, boolean reallocate, int considerAgents) {
 		targets = map.getTargets();
