@@ -13,10 +13,12 @@ public class BottleneckStrategy extends Strategy {
 	Team offTeam;
 	Team defTeam;
 	Map map;
+	private int minF;
 	
 	public BottleneckStrategy() {
 		super();
 		this.bottlenecks = null;
+		minF = 5;
 	}
 
 	/**
@@ -57,7 +59,7 @@ public class BottleneckStrategy extends Strategy {
 			}
 		}
 		ArrayList<Location> bottleneck;
-		while((bottleneck = getBottleNeckOfFreq(bottleneckPassFreqs, 10)) != null) {
+		while((bottleneck = getBottleNeckOfFreq(bottleneckPassFreqs, minF)) != null) {
 			if (agentsToAllocate.size() < bottleneck.size()) {
 				break; // while
 			}
