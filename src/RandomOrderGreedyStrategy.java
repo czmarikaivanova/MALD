@@ -5,8 +5,8 @@ public class RandomOrderGreedyStrategy extends Strategy {
 
 
 	
-	public RandomOrderGreedyStrategy() {
-		super();
+	public RandomOrderGreedyStrategy(boolean multiStage) {
+		super(multiStage);
 	}
 	
 	/**

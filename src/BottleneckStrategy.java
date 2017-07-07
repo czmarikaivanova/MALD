@@ -15,8 +15,8 @@ public class BottleneckStrategy extends Strategy {
 	Map map;
 	private int minF;
 	
-	public BottleneckStrategy() {
-		super();
+	public BottleneckStrategy(boolean multiStage) {
+		super(multiStage);
 		this.bottlenecks = null;
 		minF = 5;
 	}
@@ -58,6 +58,9 @@ public class BottleneckStrategy extends Strategy {
 				}
 			}
 		}
+		for (ArrayList<Location> bneck: bottlenecks) {
+			System.out.println(bneck.toString() + " paths : " + bottleneckPassFreqs.get(bneck));
+		}
 		ArrayList<Location> bottleneck;
 		while((bottleneck = getBottleNeckOfFreq(bottleneckPassFreqs, minF)) != null) {
 			if (agentsToAllocate.size() < bottleneck.size()) {
@@ -70,9 +73,7 @@ public class BottleneckStrategy extends Strategy {
 			new RandomStrategy().allocateTargets(map, defTeam, offTeam, reallocate, considerAgents);
 //			allocateTargetsRandom();
 		}
-		for (ArrayList<Location> bneck: bottlenecks) {
-			System.out.println(bneck.toString() + " paths : " + bottleneckPassFreqs.get(bneck));
-		}
+		
 	}
 	
 	/**

@@ -17,7 +17,7 @@ public class App {
 		strategies = new ArrayList<Strategy>();
 //		strategies.add(new RandomStrategy());
 //		strategies.add(new RandomOrderGreedyStrategy());
-		strategies.add(new BottleneckStrategy());
+		strategies.add(new BottleneckStrategy(false));
 		int[][] resArray = new int[maxMoves][strategies.size()];
 		
 		for (Strategy s: strategies) {
@@ -27,7 +27,7 @@ public class App {
 			int moveCnt = 0;
 			while (!offAgents.finished() && moveCnt < maxMoves) {
 				offAgents.playMove(map);
-				s.allocateTargets(map, defAgents, offAgents, false, Constants.CONSIDER_AGENTS_NONE);
+				s.allocateTargets(map, defAgents, offAgents, false, Constants.CONSIDER_AGENTS_OPPONENT);
 	//			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
 				defAgents.playMove(map);
 				printState();
