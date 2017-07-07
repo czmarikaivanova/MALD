@@ -10,25 +10,35 @@ public class App {
 	private Team offAgents;
 	private Team defAgents;
 	private int maxMoves = 100;
-	
+	private ArrayList<Strategy> strategies;
 	
 	public App(File input) {
-		initialize(input);
-		File outputFile = initOutputFile();
-		int moveCnt = 0;
+		strategies = new ArrayList<Strategy>();
+		strategies.add(new RandomStrategy());
+		strategies.add(new RandomOrderGreedyStrategy());
+		int[][] resArray = new int[maxMoves][strategies.size()];
 //		defAgents.allocateTargetsRandom();
 //		defAgents.allocateTargetsRndOrderGreedy();
-		ArrayList<ArrayList<Location>> bottlenecks = findBottlenecks(3);
-		printState();
-		while (!offAgents.finished() && moveCnt < maxMoves) {
-			updateOutput(outputFile, moveCnt, offAgents.finishedCnt());
-			offAgents.playMove(map);
-			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
-			defAgents.playMove(map);
+
+		
+		for (Strategy s: strategies) {
+			initialize(input);
 			printState();
-			moveCnt++;
+			ArrayList<ArrayList<Location>> bottlenecks = findBottlenecks(3);
+			int moveCnt = 0;
+			while (!offAgents.finished() && moveCnt < maxMoves) {
+				offAgents.playMove(map);
+				s.allocateTargets(map, defAgents, false, Constants.CONSIDER_AGENTS_NONE);
+	//			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
+				defAgents.playMove(map);
+				printState();
+				resArray[moveCnt][strategies.indexOf(s)] = offAgents.finishedCnt();
+				moveCnt++;
+			}
+			
 		}
 		printState();
+		writeResultsToFile(strategies, resArray);
 		if (offAgents.finished()) {
 			System.out.println("All agents reached their destinations");
 		}
@@ -37,6 +47,8 @@ public class App {
 			System.out.println("###" + finishedCnt + " agents reached their destination");
 		}
 	}
+
+
 
 	private void printState() {
 		System.out.println(map.toString());
@@ -123,27 +135,28 @@ public class App {
 		return true;
 	}
 	
-	private File initOutputFile() {
+	private void writeResultsToFile(ArrayList<Strategy> strategies, int[][] resArray) {
 		File f = new File("output/output" + new File("output/").listFiles().length + ".data" );
-		
 		try {
 			f.createNewFile();
 			Writer output = new BufferedWriter(new FileWriter(f, true));
-			output.write("# tms \t at_target \n");
+			String firstLine = "tms \t ";
+			for (Strategy s: strategies) {
+				firstLine += "\"" + s.toString() + "\"" + "\t";
+			}
+			firstLine += "\n";
+			output.write(firstLine);
+			for (int i = 0; i < resArray.length; i++) {
+				output.write(i + "\t");
+				for (int j = 0; j < resArray[i].length; j++) {
+					output.write("\t" + resArray[i][j]);
+				}
+				output.write("\n");
+			}
 			output.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return f; 
 	}
 	
-	private void updateOutput(File f, int tms, int atTarget) {
-		try {
-			Writer output = new BufferedWriter(new FileWriter(f, true));
-			output.write(tms +"\t"+ atTarget + "\n");
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

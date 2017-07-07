@@ -12,7 +12,7 @@ public class Team implements Iterable<Agent> {
 	private ArrayList<Agent> agents;
 	private ArrayList<Location> targets;
 	private int id;
-	private Random randomGen;
+
 	private Map map;
 	private Team otherTeam;
 	
@@ -23,7 +23,7 @@ public class Team implements Iterable<Agent> {
 	public Team(int id, Map map, Team otherTeam) {
 		this.id = id;
 		agents = new ArrayList<Agent>();
-		randomGen = new Random(10);
+		
 		this.map = map;
 		this.otherTeam = otherTeam;
 		this.targets = map.getTargets();
@@ -131,41 +131,41 @@ public class Team implements Iterable<Agent> {
 	 * 		Right now it would return null.
 	 * @param targets
 	 */
-	public void allocateTargetsRndOrderGreedy() {
-		targetAllocValidityCheck();
-		ArrayList<Location> availableTargets = new ArrayList<Location>(targets); 
-		for (Agent agent: agents) {
-			if (availableTargets== null || availableTargets.size() == 0) {
-				System.err.println("No more available targets");
-				System.exit(1);
-			}
-			if (agent.getTargetLocation() == null) { // allocate agent only if he hasn't any target yet
-				Location myNewTarget = agent.getClosestLocation(availableTargets);
-				agent.setTargetLocation(myNewTarget);
-				availableTargets.remove(myNewTarget);
-			}
-		}
-	}
+//	public void allocateTargetsRndOrderGreedy() {
+//		targetAllocValidityCheck();
+//		ArrayList<Location> availableTargets = new ArrayList<Location>(targets); 
+//		for (Agent agent: agents) {
+//			if (availableTargets== null || availableTargets.size() == 0) {
+//				System.err.println("No more available targets");
+//				System.exit(1);
+//			}
+//			if (agent.getTargetLocation() == null) { // allocate agent only if he hasn't any target yet
+//				Location myNewTarget = agent.getClosestLocation(availableTargets);
+//				agent.setTargetLocation(myNewTarget);
+//				availableTargets.remove(myNewTarget);
+//			}
+//		}
+//	}
 
 	/**
 	 * allocate targets to agents randomly
 	 * @param targets
 	 */
-	public void allocateTargetsRandom() {
-		targetAllocValidityCheck();
-		Collections.shuffle(targets, randomGen);	
-		int i = 0;
-		for (Agent agent: agents) {
-			if (i >= targets.size()) {  // assign always only one target to one agent
-				return;
-			}
-			if (agent.getTargetLocation() == null) { // allocate agent only if he hasn't any target yet
-				agent.setTargetLocation(targets.get(i));
-				i++;
-			}
-		}
-	}
-	
+//	public void allocateTargetsRandom() {
+//		targetAllocValidityCheck();
+//		Collections.shuffle(targets, randomGen);	
+//		int i = 0;
+//		for (Agent agent: agents) {
+//			if (i >= targets.size()) {  // assign always only one target to one agent
+//				return;
+//			}
+//			if (agent.getTargetLocation() == null) { // allocate agent only if he hasn't any target yet
+//				agent.setTargetLocation(targets.get(i));
+//				i++;
+//			}
+//		}
+//	}
+//	
 	/**
 	 * Assign targets to defending agents according to frequently used bottlenecks found in the map
 	 */
@@ -203,7 +203,7 @@ public class Team implements Iterable<Agent> {
 			bottleneckPassFreqs.remove(bottleneck);
 		}
 		if (!agentsToAllocate.isEmpty()) {
-			allocateTargetsRandom();
+//			allocateTargetsRandom();
 		}
 		for (ArrayList<Location> bneck: bottlenecks) {
 			System.out.println(bneck.toString() + " paths : " + bottleneckPassFreqs.get(bneck));
