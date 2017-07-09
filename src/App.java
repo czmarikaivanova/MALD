@@ -15,9 +15,15 @@ public class App {
 	public App(File input) {
 		initialize(input); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
 		strategies = new ArrayList<Strategy>();
-//		strategies.add(new RandomStrategy());
-//		strategies.add(new RandomOrderGreedyStrategy());
-		strategies.add(new BottleneckStrategy(false));
+		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
+//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
+//		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+//		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+
+		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
 		int[][] resArray = new int[maxMoves][strategies.size()];
 		
 		for (Strategy s: strategies) {
@@ -27,7 +33,7 @@ public class App {
 			int moveCnt = 0;
 			while (!offAgents.finished() && moveCnt < maxMoves) {
 				offAgents.playMove(map);
-				s.allocateTargets(map, defAgents, offAgents, false, Constants.CONSIDER_AGENTS_OPPONENT);
+				s.allocateTargets(map, defAgents, offAgents);
 	//			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
 				defAgents.playMove(map);
 				printState();

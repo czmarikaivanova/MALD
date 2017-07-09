@@ -89,8 +89,9 @@ public class BFS extends Algorithm {
 				Location node = loc;
 				while (!node.equals(start)) {
 					node = prevs.get(node);
-					if (node == null) {
-						System.out.println("exit");
+					if (node == null) { // no path exist (blocked)
+						dst = Constants.INFINITY;
+						break;
 					}
 					dst++;
 				}

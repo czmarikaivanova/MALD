@@ -7,8 +7,8 @@ public class RandomStrategy extends Strategy {
 
 	private Random randomGen;
 	
-	public RandomStrategy() {
-		super();
+	public RandomStrategy(boolean multiStage, boolean reallocate, int considerAgents) {
+		super(multiStage, reallocate, considerAgents);
 		randomGen = new Random(10);
 	}
 	
@@ -17,7 +17,7 @@ public class RandomStrategy extends Strategy {
 	 * @param targets
 	 */
 	@Override
-	public void allocateTargets(Map map, Team defTeam, Team offTeam, boolean reallocate, int considerAgents) {
+	public void allocateTargets() {
 		targets = map.getTargets();
 		Collections.shuffle(targets, randomGen);	
 		int i = 0;
@@ -33,7 +33,7 @@ public class RandomStrategy extends Strategy {
 	}
 	
 	public String toString() {
-		return "RANDOM STRATEGY";
+		return "RANDOM STRATEGY" + considerAgents;
 	}
 
 

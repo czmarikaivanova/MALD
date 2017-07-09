@@ -1,12 +1,13 @@
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RandomOrderGreedyStrategy extends Strategy {
 
 
 	
-	public RandomOrderGreedyStrategy(boolean multiStage) {
-		super(multiStage);
+	public RandomOrderGreedyStrategy(boolean multiStage, boolean reallocate, int considerAgents) {
+		super(multiStage, reallocate, considerAgents);
 	}
 	
 	/**
@@ -20,16 +21,17 @@ public class RandomOrderGreedyStrategy extends Strategy {
 	 * @param targets
 	 */
 	@Override
-	public void allocateTargets(Map map, Team defTeam, Team ofTeam, boolean reallocate, int considerAgents) {
+	public void allocateTargets() {
 		targets = map.getTargets();
 		ArrayList<Location> availableTargets = new ArrayList<Location>(targets); 
+		defTeam.shuffle();
 		for (Agent agent: defTeam) {
 			if (availableTargets== null || availableTargets.size() == 0) {
 				System.err.println("No more available targets");
 				System.exit(1);
 			}
 			if (agent.getTargetLocation() == null) { // allocate agent only if he hasn't any target yet
-				Location myNewTarget = agent.getClosestLocation(availableTargets);
+				Location myNewTarget = agent.getClosestLocation(availableTargets, considerAgents);
 				agent.setTargetLocation(myNewTarget);
 				availableTargets.remove(myNewTarget);
 			}
@@ -37,7 +39,7 @@ public class RandomOrderGreedyStrategy extends Strategy {
 	}
 
 	public String toString() {
-		return "RND GREEDY STRATEGY";
+		return "RND GREEDY STRATEGY" + considerAgents;
 	}
 
 }

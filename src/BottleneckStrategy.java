@@ -10,13 +10,10 @@ import java.util.stream.Collectors;
 public class BottleneckStrategy extends Strategy {
 
 	ArrayList<ArrayList<Location>> bottlenecks;
-	Team offTeam;
-	Team defTeam;
-	Map map;
 	private int minF;
 	
-	public BottleneckStrategy(boolean multiStage) {
-		super(multiStage);
+	public BottleneckStrategy(boolean multiStage, boolean reallocate, int considerAgents) {
+		super(multiStage, reallocate, considerAgents);
 		this.bottlenecks = null;
 		minF = 5;
 	}
@@ -25,10 +22,7 @@ public class BottleneckStrategy extends Strategy {
 	 * Assign targets to defending agents according to frequently used bottlenecks found in the map
 	 */
 	@Override
-	public void allocateTargets(Map map, Team defTeam, Team offTeam,  boolean reallocate, int considerAgents) {
-		this.offTeam = offTeam;
-		this.defTeam = defTeam;
-		this.map = map;
+	public void allocateTargets() {
 		if (bottlenecks == null) { // first call of this method
 			bottlenecks = findBottlenecks(3);
 		}
@@ -70,7 +64,7 @@ public class BottleneckStrategy extends Strategy {
 			bottleneckPassFreqs.remove(bottleneck);
 		}
 		if (!agentsToAllocate.isEmpty()) {
-			new RandomStrategy().allocateTargets(map, defTeam, offTeam, reallocate, considerAgents);
+			new RandomStrategy(multiStage, reallocate, considerAgents).allocateTargets(map, defTeam, offTeam);
 //			allocateTargetsRandom();
 		}
 		

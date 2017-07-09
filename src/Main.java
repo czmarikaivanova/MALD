@@ -31,8 +31,8 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		int offCnt = 40;
-		int defCnt = 20;
+		int offCnt = 80;
+		int defCnt = 40;
 		agentCnt = offCnt + defCnt;
 		int x1 = 2;
 		int y1 = 33;
@@ -42,7 +42,7 @@ public class Main {
 		int y2 = 33;
 		int w2 = 20;
 		int h2 = 20;
-		rndGen = new Random(5);
+		rndGen = new Random(10);
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
 		int x = 2;
 		int y = 33;

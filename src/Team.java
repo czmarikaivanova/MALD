@@ -265,6 +265,13 @@ public class Team implements Iterable<Agent> {
 			this.map = map;
 		}
 	}
+
+	/**
+	 * shuffle agents order
+	 */
+	public void shuffle() {
+		Collections.shuffle(agents, new Random(111));
+	}
 	
 //	/**
 //	 * Compares two agents accordint to their distance to a specified location
