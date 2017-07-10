@@ -28,7 +28,7 @@ public class LRAstar extends Algorithm {
 		closedList = new LinkedList<Location>();
 		ghValues = new HashMap<Location, Pair<Integer,Integer>>();
 		prevs = new HashMap<Location, Location>();
-		dstsToTarget = new BFS(Constants.CONSIDER_AGENTS_NONE).distsToLocation(map, target);
+			dstsToTarget = new BFS(Constants.CONSIDER_AGENTS_NONE).distsToLocation(map, target);
 		for (Location loc: map) {
 			int dst = dstsToTarget[loc.getId()];
 			ghValues.put(loc, new Pair<Integer, Integer>(Constants.INFINITY, dst));
