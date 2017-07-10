@@ -42,6 +42,7 @@ public class Map implements Iterable<Location> {
 	private int width;
 	private int height;
 	private int locationCount;
+	private int agentCnt;
 
 
 	public Map(File input) {
@@ -69,6 +70,7 @@ public class Map implements Iterable<Location> {
 				e.printStackTrace();
 			}
 		} else { // input is a map
+			targets = new ArrayList<Location>();
 			readMap(input);
 		}
 		locationCount = width * height;
@@ -282,11 +284,11 @@ public class Map implements Iterable<Location> {
 					}
 				}
 				else if (line.matches("Agents.*")) {
-					targets = new ArrayList<Location>();
-					int agentCnt = Integer.parseInt(br.readLine());
+					int agentGroupCnt =  Integer.parseInt(br.readLine());
+					agentCnt += agentGroupCnt;
 					String agentLine;
 					String[] agentLineSplit;
- 					for (int i = 0; i < agentCnt; i++) {
+ 					for (int i = 0; i < agentGroupCnt; i++) {
 						agentLine = br.readLine();
 						agentLineSplit = agentLine.split(",");
 						int x = Integer.parseInt(agentLineSplit[1]);

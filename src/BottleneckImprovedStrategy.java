@@ -28,6 +28,8 @@ public class BottleneckImprovedStrategy extends Strategy {
 			bottlenecks.addAll(findBottlenecks(1));
 			bottlenecks.addAll(findBottlenecks(2));
 			bottlenecks.addAll(findBottlenecks(3));
+			bottlenecks.addAll(findBottlenecks(4));
+			bottlenecks.addAll(findBottlenecks(5));
 		}
 		ArrayList<Agent> agentsToAllocate = new ArrayList<Agent>();
 		if (reallocate) { // if we want to reallocate, we will add all the agents to the list, including those who are at their targsts
