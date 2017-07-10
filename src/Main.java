@@ -39,7 +39,7 @@ public class Main {
 		int defCnt = 30;
 		agentCnt = offCnt + defCnt;
 		int x1 = 2;
-		int y1 = 33;
+		int y1 = 2;
 		int w1 = 20;
 		int h1 = 20;
 		int x2 = 33;
@@ -49,29 +49,29 @@ public class Main {
 		rndGen = new Random(1234567);
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
 		int x = 2;
-		int y = 33;
+		int y = 2;
 		int w = 20;
 		int h = 20;
 		generateDeffensive(x,y,w,h,defCnt,input_new);
 		
-		 offCnt = 60;
-		 defCnt = 30;
-		agentCnt = offCnt + defCnt;
-		 x1 = 2;
-		 y1 = 2;
-		 w1 = 20;
-		 h1 = 20;
-		 x2 = 33;
-		 y2 = 33;
-		 w2 = 20;
-		 h2 = 20;
-		rndGen = new Random(1234567);
-		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-		 x = 2;
-		 y = 2;
-		 w = 20;
-		 h = 20;
-		generateDeffensive(x,y,w,h,defCnt,input_new);
+//		 offCnt = 60;
+//		 defCnt = 30;
+//		agentCnt = offCnt + defCnt;
+//		 x1 = 2;
+//		 y1 = 2;
+//		 w1 = 20;
+//		 h1 = 20;
+//		 x2 = 33;
+//		 y2 = 33;
+//		 w2 = 20;
+//		 h2 = 20;
+//		rndGen = new Random(1234567);
+//		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
+//		 x = 2;
+//		 y = 2;
+//		 w = 20;
+//		 h = 20;
+//		generateDeffensive(x,y,w,h,defCnt,input_new);
 		new App(input_new);	
 	}
 
