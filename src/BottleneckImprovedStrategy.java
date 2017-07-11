@@ -116,23 +116,7 @@ public class BottleneckImprovedStrategy extends Strategy {
 		return null;
 	}
 
-	/**
-	 * randomly assign targets to offensive agents and calculate shortest paths
-	 * @return
-	 */
-	private ArrayList<ArrayList<Location>> estimatePaths(int considerAgents, Map map, ArrayList<Location> forbidden) {
-		ArrayList<ArrayList<Location>> paths = new ArrayList<ArrayList<Location>>();
-		ArrayList<Location> targets = map.getTargets();
-		int i = 0;
-		for (Agent a : offTeam) {
-			Location t = targets.get(i);  // guess a target by id
-			i++;
-			LinkedList<Location> path = new BFS(considerAgents).findPathWithout(a.getCurrentLocation(), t, forbidden, map); 
-			paths.add(new ArrayList<Location>(path));
-		}
-		return paths;
-	}
-	
+
 	private boolean hasCommonElements(ArrayList<Location> list1, ArrayList<Location> list2) {
 		for (Location t1: list1) {
 			for (Location t2: list2) {
@@ -198,33 +182,7 @@ public class BottleneckImprovedStrategy extends Strategy {
 		return true;
 	}
 	
-	
-	/**
-	 * Compares two agents accordint to their distance to a specified location
-	 * @author marika
-	 *
-	 */
-	private class DistToLocationComparator implements Comparator<Agent> {
-		BFS bfs;
-		Map map;
-		Location loc;
-		
-		public DistToLocationComparator(Map map, Location loc) {
-			super();
-			this.map = map;
-			this.loc = loc;
-			bfs = new BFS(Constants.CONSIDER_AGENTS_NONE);
-		}
 
-		@Override
-		public int compare(Agent o1, Agent o2) {
-			int d1 = bfs.minPathLength(o1.getCurrentLocation(), loc, map);
-			int d2 = bfs.minPathLength(o2.getCurrentLocation(), loc, map);
-			return Integer.compare(d1, d2);
-		}
-		
-	}
-	
 
 
 }

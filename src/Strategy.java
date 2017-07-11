@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class Strategy {
 	
@@ -30,6 +31,24 @@ public abstract class Strategy {
 			allocateTargets();
 		}
 	}
+	
+	/**
+	 * randomly assign targets to offensive agents and calculate shortest paths
+	 * @return
+	 */
+	protected ArrayList<ArrayList<Location>> estimatePaths(int considerAgents, Map map, ArrayList<Location> forbidden) {
+		ArrayList<ArrayList<Location>> paths = new ArrayList<ArrayList<Location>>();
+		ArrayList<Location> targets = map.getTargets();
+		int i = 0;
+		for (Agent a : offTeam) {
+			Location t = targets.get(i);  // guess a target by id
+			i++;
+			LinkedList<Location> path = new BFS(considerAgents).findPathWithout(a.getCurrentLocation(), t, forbidden, map); 
+			paths.add(new ArrayList<Location>(path));
+		}
+		return paths;
+	}
+	
 	
 	protected abstract void allocateTargets();
 	

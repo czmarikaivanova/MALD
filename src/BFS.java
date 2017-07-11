@@ -97,9 +97,6 @@ public class BFS extends Algorithm {
 				if (adjLoc == null) {
 					System.out.println("adjLoc = null");
 				}
-				if (forbidden.contains(adjLoc)) {
-					System.out.println("Forbidden contains adjLoc");
-				}
 				if (!adjLoc.isObstacle() && flags.get(adjLoc).equals(Boolean.FALSE) && !forbidden.contains(adjLoc))  { // it will not be null
 					if (adjLoc.getAgent() == null || considerAgents == Constants.CONSIDER_AGENTS_NONE || (considerAgents == Constants.CONSIDER_AGENTS_OPPONENT) && start.getAgent().getTeam() == adjLoc.getAgent().getTeam()) {
 							flags.put(adjLoc, true);
