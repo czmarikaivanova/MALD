@@ -42,7 +42,9 @@ public class PathFreqStrategy extends Strategy {
 			ArrayList<ArrayList<Location>> paths = estimatePaths(considerAgents, map, forbidden);
 			HashMap<Location, Pair<Integer, Integer>> pathFreqsDists = calculatePathFreqDists(paths);
 			mostFreqLoc = getMostFreqLoc(pathFreqsDists);
+			
 			if (mostFreqLoc != null) { // is it necessary???
+				System.err.println(mostFreqLoc.toString());
 				Square square = new Square(mostFreqLoc);
 				LinkedList<Location> bneck = square.expand(map, forbidden);
 				assignLocations(bneck, agentsToAllocate, map);
@@ -117,7 +119,7 @@ public class PathFreqStrategy extends Strategy {
 		Iterator<HashMap.Entry<Location, Pair<Integer, Integer>>> it = pathFreqsDists.entrySet().iterator();
 		while (it.hasNext()) {
 			HashMap.Entry<Location, Pair<Integer, Integer>> entry = (HashMap.Entry<Location, Pair<Integer, Integer>>)it.next();
-			System.out.println(entry.getKey() + "  : " + entry.getValue().getFirst() + " , " + entry.getValue().getSecond());
+//			System.out.println(entry.getKey() + "  : " + entry.getValue().getFirst() + " , " + entry.getValue().getSecond());
 		}
 		return pathFreqsDists;
 	}

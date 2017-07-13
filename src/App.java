@@ -17,7 +17,7 @@ public class App {
 		strategies = new ArrayList<Strategy>();
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
 //		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));

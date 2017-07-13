@@ -13,7 +13,7 @@ public class Square {
 		this.center = center;
 		this.diam = 0;
 		obstSoFar = new ArrayList<Location>();
-		EXP_LIMIT = 5;
+		EXP_LIMIT = 10;
 	}
 	
 	/**
@@ -133,13 +133,15 @@ public class Square {
 	 * @return
 	 */
 	private boolean isUsefulForBottleneck(int x, int y, Map map) {
-		Location loc = map.getLocation(x, y);
-		if (loc.isObstacle() ) {
-			if (map.adjacent(loc, obstSoFar) || obstSoFar.isEmpty()) {
-				obstSoFar.add(loc);
-			}
-			else {
-				return true;
+		if (map.inMap(x, y)) {
+			Location loc = map.getLocation(x, y);
+			if (loc.isObstacle() ) {
+				if (map.adjacent(loc, obstSoFar) || obstSoFar.isEmpty()) {
+					obstSoFar.add(loc);
+				}
+				else {
+					return true;
+				}
 			}
 		}
 		return false;

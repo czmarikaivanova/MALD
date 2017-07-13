@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -136,6 +138,7 @@ public class Map implements Iterable<Location> {
 				}
 			}
 		}
+		Collections.shuffle(neighbours, new Random(1));
 		return neighbours;
 	}
 
@@ -337,6 +340,16 @@ public class Map implements Iterable<Location> {
 			}
 		}
 		return false;
+	}
+
+	public boolean inMap(int x, int y) {
+		if (x < 0 || y < 0) {
+			return false;
+		}
+		if (x >= height || y >= width) {
+			return false;
+		}
+		return true;
 	}
 
 
