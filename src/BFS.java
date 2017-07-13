@@ -42,11 +42,10 @@ public class BFS extends Algorithm {
 				if (adjLoc == null) {
 					System.out.println("adjLoc = null");
 				}
-				if (!adjLoc.isObstacle() && flags.get(adjLoc).equals(Boolean.FALSE)  ) { // it will not be null
+				if ((!adjLoc.isObstacle() || adjLoc.equals(start) || adjLoc.equals(target)) && flags.get(adjLoc).equals(Boolean.FALSE)  ) { // it will not be null
 					if (adjLoc.getAgent() == null || considerAgents == Constants.CONSIDER_AGENTS_NONE || (considerAgents == Constants.CONSIDER_AGENTS_OPPONENT) && start.getAgent().getTeam() == adjLoc.getAgent().getTeam()) {
 							flags.put(adjLoc, true);
 							prevs.put(adjLoc, loc);
-							
 							queue.add(adjLoc);
 					}
 				}
@@ -140,7 +139,7 @@ public class BFS extends Algorithm {
 		findPath(start, null, map);
 		int[] dists = new int[map.getLocationCount()];
 		for (Location loc : map) {
-			if (!loc.isObstacle()) {
+			if (!loc.isObstacle() || loc.equals(start)) {
 				int dst = 0;
 				Location node = loc;
 				while (!node.equals(start)) {
@@ -155,6 +154,10 @@ public class BFS extends Algorithm {
 			}
 		}
 		return dists;
+	}
+	
+	public int distanceBetweenLocs(Map map, Location l1, Location l2) {
+		return findPath(l1, l2, map).size();
 	}
 
 	

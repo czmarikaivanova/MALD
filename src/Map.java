@@ -320,5 +320,24 @@ public class Map implements Iterable<Location> {
 		return targets;
 	}
 
+	/**
+	 * determine whether a location is adjacent to one of other locations in a list
+	 * @param loc 
+	 * @param locList
+	 * @return
+	 */
+	public boolean adjacent(Location loc, ArrayList<Location> locList) {
+		int x = loc.getX();
+		int y = loc.getY();
+		for (Location adj: locList) {
+			int ax = adj.getX();
+			int ay = adj.getY();
+			if (Math.abs(x - ax) <= 1 && Math.abs(y-ay) <= 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 }

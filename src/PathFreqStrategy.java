@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class PathFreqStrategy extends Strategy {
 
@@ -29,6 +30,11 @@ public class PathFreqStrategy extends Strategy {
 		}
 		ArrayList<Location> forbidden = new ArrayList<Location>();
 		Location mostFreqLoc;
+		// in this loop we always predict paths for all offensive agents and calculate the most frequent location with lowest cumulative distance
+		// Centered in this location, we are expanding a square and trying to identify a bottleneck. If we find it, we 
+		// assign defensive agents to the locations of the bottleneck and insert these locations to the forbidden list.
+		// we hope that it should plug the bottleneck. Then we continue predicting the paths with the plugged bottleneck, and get new prediction
+		// and possibly new bottleneck...
 		do  {
 			if (agentsToAllocate.isEmpty()) {
 				break;
@@ -37,9 +43,11 @@ public class PathFreqStrategy extends Strategy {
 			HashMap<Location, Pair<Integer, Integer>> pathFreqsDists = calculatePathFreqDists(paths);
 			mostFreqLoc = getMostFreqLoc(pathFreqsDists);
 			if (mostFreqLoc != null) { // is it necessary???
-				assignLocation(mostFreqLoc, agentsToAllocate, map);
-				forbidden.add(mostFreqLoc);
-				pathFreqsDists.remove(mostFreqLoc);
+				Square square = new Square(mostFreqLoc);
+				LinkedList<Location> bneck = square.expand(map, forbidden);
+				assignLocations(bneck, agentsToAllocate, map);
+				forbidden.addAll(bneck);
+//				pathFreqsDists.remove(mostFreqLoc); // possibly delete ??
 			}
 			else {
 				break;
@@ -87,7 +95,7 @@ public class PathFreqStrategy extends Strategy {
 	}
 
 	/**
-	 * fill and return the HashMap mapping location to two numbers - frequency and cummulative distance
+	 * fill and return the HashMap mapping location to two numbers - frequency and cumulative distance
 	 * @param paths
 	 * @return
 	 */
@@ -124,5 +132,19 @@ public class PathFreqStrategy extends Strategy {
 		Agent a = agentsToAllocate.remove(0);
 		a.setTargetLocation(loc);
 	}
+	
+	/**
+	 * Assign locations of a specified bottleneck to appropriate agents that still haven't been allocated
+	 * @param bottleneck - locations to be assinged
+	 * @param agentsToAllocate agents that still haven't been allocated and can be used
+	 */
+	private void assignLocations(LinkedList<Location> locs, ArrayList<Agent> agentsToAllocate, Map map) {
+		for (Location loc: locs) {
+			Collections.sort(agentsToAllocate, new DistToLocationComparator(map, loc)); // can be faster by placing in front of cycle, with a minor loss of accuracy
+			Agent a = agentsToAllocate.remove(0);
+			a.setTargetLocation(loc);
+		}
+	}
+	
 
 }
