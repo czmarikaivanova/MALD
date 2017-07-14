@@ -6,8 +6,18 @@ import java.util.LinkedList;
 
 public class PathFreqStrategy extends Strategy {
 
-	public PathFreqStrategy(boolean multiStage, boolean relocate, int considerAgents) {
+	private boolean minCD;
+	
+	/**
+	 * 
+	 * @param multiStage shall we calculate targets in every step
+	 * @param relocate - shall we reconsider those agents who already reached their destination
+	 * @param considerAgents - shell we consider agents as obstacles
+	 * @param minCD - shall we want the min cummulative distance
+	 */
+	public PathFreqStrategy(boolean multiStage, boolean relocate, int considerAgents, boolean minCD) {
 		super(multiStage, relocate, considerAgents);
+		this.minCD = minCD;
 	}
 
 	/**
@@ -83,14 +93,25 @@ public class PathFreqStrategy extends Strategy {
 			}
 		}
 		//	From among the top frequency locations, choose the one with minimum cummulative distance
-		
-		int minCD = Constants.INFINITY;
 		Location bestLoc = null;
-		for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) {
-			int cd = tfl.getSecond().getSecond();
-			if (cd < minCD) {
-				minCD = cd;
-				bestLoc = tfl.getFirst();
+		if (minCD) {
+			int minCD = Constants.INFINITY; // for min distance
+			for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) {
+				int cd = tfl.getSecond().getSecond();
+				if (cd < minCD) {
+					minCD = cd;
+					bestLoc = tfl.getFirst();
+				}
+			}
+		}
+		else {
+			int maxCD = 0; // for max distance
+			for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) {
+				int cd = tfl.getSecond().getSecond();
+				if (cd > maxCD) {
+					maxCD = cd;
+					bestLoc = tfl.getFirst();
+				}
 			}
 		}
 		return bestLoc;
@@ -117,10 +138,10 @@ public class PathFreqStrategy extends Strategy {
 			}
 		}
 		Iterator<HashMap.Entry<Location, Pair<Integer, Integer>>> it = pathFreqsDists.entrySet().iterator();
-		while (it.hasNext()) {
-			HashMap.Entry<Location, Pair<Integer, Integer>> entry = (HashMap.Entry<Location, Pair<Integer, Integer>>)it.next();
+//		while (it.hasNext()) {
+//			HashMap.Entry<Location, Pair<Integer, Integer>> entry = (HashMap.Entry<Location, Pair<Integer, Integer>>)it.next();
 //			System.out.println(entry.getKey() + "  : " + entry.getValue().getFirst() + " , " + entry.getValue().getSecond());
-		}
+//		}
 		return pathFreqsDists;
 	}
 	
@@ -147,6 +168,9 @@ public class PathFreqStrategy extends Strategy {
 			a.setTargetLocation(loc);
 		}
 	}
-	
+
+	public String toString() {
+		return "SQUARE STRATEGY " + ( minCD ? "MinCD" : "MaxCD");
+	}
 
 }
