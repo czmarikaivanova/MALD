@@ -23,9 +23,10 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		for (int iter = 0; iter < 10; iter++) {
 		createdAgents = 0;
-		File input = new File("maps/isound5.map");
-		File input_new = new File("maps/isound5_new.map");
+		File input = new File("maps/isound6.map");
+		File input_new = new File("maps/isound6_new.map");
 		try {
 			copyFileUsingChannel(input, input_new);
 		} catch (IOException e) {
@@ -43,13 +44,14 @@ public class Main {
 		int w1 = 20;
 		int h1 = 20;
 		int x2 = 33;
-		int y2 = 33;
+		int y2 = 3;
 		int w2 = 20;
 		int h2 = 20;
-		rndGen = new Random(76599);
+		rndGen = new Random(iter * 101);
+		System.out.println("seed: " + iter * 101);
 		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-		int x = 2;
-		int y = 33;
+		int x = 3;
+		int y = 3;
 		int w = 20;
 		int h = 20;
 		generateDeffensive(x,y,w,h,defCnt,input_new);
@@ -73,6 +75,7 @@ public class Main {
 //		 h = 20;
 //		generateDeffensive(x,y,w,h,defCnt,input_new);
 		new App(input_new);	
+		}
 	}
 
 	/**

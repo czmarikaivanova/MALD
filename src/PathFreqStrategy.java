@@ -39,6 +39,7 @@ public class PathFreqStrategy extends Strategy {
 			}
 		}
 		ArrayList<Location> forbidden = new ArrayList<Location>();
+		ArrayList<Location> freqLocs = new ArrayList<Location>();
 		Location mostFreqLoc;
 		// in this loop we always predict paths for all offensive agents and calculate the most frequent location with lowest cumulative distance
 		// Centered in this location, we are expanding a square and trying to identify a bottleneck. If we find it, we 
@@ -51,12 +52,16 @@ public class PathFreqStrategy extends Strategy {
 			}
 			ArrayList<ArrayList<Location>> paths = estimatePaths(considerAgents, map, forbidden);
 			HashMap<Location, Pair<Integer, Integer>> pathFreqsDists = calculatePathFreqDists(paths);
-			mostFreqLoc = getMostFreqLoc(pathFreqsDists);
+			mostFreqLoc = getMostFreqLoc(pathFreqsDists, freqLocs);
+			freqLocs.add(mostFreqLoc);
 			
 			if (mostFreqLoc != null) { // is it necessary???
 				System.err.println(mostFreqLoc.toString());
 				Square square = new Square(mostFreqLoc);
 				LinkedList<Location> bneck = square.expand(map, forbidden);
+				if (bneck == null) {
+					break;
+				}
 				assignLocations(bneck, agentsToAllocate, map);
 				forbidden.addAll(bneck);
 //				pathFreqsDists.remove(mostFreqLoc); // possibly delete ??
@@ -75,7 +80,7 @@ public class PathFreqStrategy extends Strategy {
 	 * @param pathFreqsDists HashMap mapping Locations to the pair of their visit frequency and cummulative distance
 	 * @return
 	 */
-	private Location getMostFreqLoc(HashMap<Location, Pair<Integer, Integer>> pathFreqsDists) {
+	private Location getMostFreqLoc(HashMap<Location, Pair<Integer, Integer>> pathFreqsDists, ArrayList<Location> freqLocs) {
 		ArrayList<Pair<Location, Pair<Integer, Integer>>> topFreqLocs = new ArrayList<Pair<Location, Pair<Integer, Integer>>>(); 
 		// create the list of top frequency Locations
 		int maxF = 0;
@@ -98,10 +103,12 @@ public class PathFreqStrategy extends Strategy {
 		if (minCD) {
 			int minCD = Constants.INFINITY; // for min distance
 			for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) {
-				int cd = tfl.getSecond().getSecond();
-				if (cd < minCD) {
-					minCD = cd;
-					bestLoc = tfl.getFirst();
+				if (!freqLocs.contains(tfl.getFirst())) {
+					int cd = tfl.getSecond().getSecond();
+					if (cd < minCD) {
+						minCD = cd;
+						bestLoc = tfl.getFirst();
+					}
 				}
 			}
 		}
@@ -165,7 +172,7 @@ public class PathFreqStrategy extends Strategy {
 	private void assignLocations(LinkedList<Location> locs, ArrayList<Agent> agentsToAllocate, Map map) {
 		for (Location loc: locs) {
 			if (agentsToAllocate.size() == 0) {
-				System.out.println("No agents to allocate");
+				return;
 			}
 			Collections.sort(agentsToAllocate, new DistToLocationComparator(map, loc)); // can be faster by placing in front of cycle, with a minor loss of accuracy
 			Agent a = agentsToAllocate.remove(0);
