@@ -119,6 +119,7 @@ public class Agent  {
 	public void setTargetLocation(Location target) {
 		target.setAgentDest(this);
 		this.targetLocation = target;
+		System.err.println("Agent at " + this.myCurrentLocation + " assigned to target " + this.targetLocation);
 	}
 	
 	public Location getCurrentLocation() {

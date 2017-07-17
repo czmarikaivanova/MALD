@@ -93,6 +93,7 @@ public class PathFreqStrategy extends Strategy {
 			}
 		}
 		//	From among the top frequency locations, choose the one with minimum cummulative distance
+//		Location bestLoc = topFreqLocs.get(0).getFirst();
 		Location bestLoc = null;
 		if (minCD) {
 			int minCD = Constants.INFINITY; // for min distance
@@ -163,6 +164,9 @@ public class PathFreqStrategy extends Strategy {
 	 */
 	private void assignLocations(LinkedList<Location> locs, ArrayList<Agent> agentsToAllocate, Map map) {
 		for (Location loc: locs) {
+			if (agentsToAllocate.size() == 0) {
+				System.out.println("No agents to allocate");
+			}
 			Collections.sort(agentsToAllocate, new DistToLocationComparator(map, loc)); // can be faster by placing in front of cycle, with a minor loss of accuracy
 			Agent a = agentsToAllocate.remove(0);
 			a.setTargetLocation(loc);

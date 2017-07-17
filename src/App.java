@@ -25,7 +25,7 @@ public class App {
 //		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false));
+//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false));
 		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, true));
 
 		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
@@ -41,7 +41,7 @@ public class App {
 				s.allocateTargets(map, defAgents, offAgents);
 	//			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
 				defAgents.playMove(map);
-//				printState();
+				printState();
 				resArray[moveCnt][strategies.indexOf(s)] = offAgents.finishedCnt();
 				moveCnt++;
 			}
