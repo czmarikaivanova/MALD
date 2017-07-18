@@ -17,7 +17,7 @@ public class Square {
 		this.center = center;
 		this.diam = 0;
 		obstaclesFirst = new ArrayList<Location>();
-		EXP_LIMIT = 10;
+		EXP_LIMIT = 15;
 	}
 	
 	/**

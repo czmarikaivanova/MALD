@@ -43,13 +43,14 @@ public class Main {
 			int x1 = 2;
 			int y1 = 2;
 			int w1 = 20;
-			int h1 = 20;
+			int h1 = 30;
 			int x2 = 33;
-			int y2 = 58;
+			int y2 = 56;
 			int w2 = 20;
 			int h2 = 20;
-			rndGen = new Random(iter * 444);
-			System.out.println("seed: " + iter * 444);
+			int seed = 11881;
+			rndGen = new Random(seed);
+			System.out.println(seed);
 			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
 			int x = 3;
 			int y = 2;
