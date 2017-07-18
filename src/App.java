@@ -12,7 +12,9 @@ public class App {
 	private int maxMoves = 100;
 	private ArrayList<Strategy> strategies;
 	
+	
 	public App(File input) {
+		
 		initialize(input); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
 		strategies = new ArrayList<Strategy>();
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
@@ -23,10 +25,12 @@ public class App {
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, true));
+//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, true));
 //		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false));
-		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, true));
+//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, true));
 
 		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
 		int[][] resArray = new int[maxMoves][strategies.size()];

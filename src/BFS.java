@@ -37,7 +37,7 @@ public class BFS extends Algorithm {
 			if (loc == null) {
 				System.out.println("Removed a null location from the queue");
 			}
-			ArrayList<Location> neighbours = map.neighbors(loc, false);
+			ArrayList<Location> neighbours = map.neighbors(loc, false, false);
 			for (Location adjLoc: neighbours) {
 				if (adjLoc == null) {
 					System.out.println("adjLoc = null");
@@ -91,7 +91,7 @@ public class BFS extends Algorithm {
 			if (loc == null) {
 				System.out.println("Removed a null location from the queue");
 			}
-			ArrayList<Location> neighbours = map.neighbors(loc, false);
+			ArrayList<Location> neighbours = map.neighbors(loc, false, false);
 			for (Location adjLoc: neighbours) {
 				if (adjLoc == null) {
 					System.out.println("adjLoc = null");

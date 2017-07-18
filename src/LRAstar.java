@@ -38,7 +38,7 @@ public class LRAstar extends Algorithm {
 		int tms = 0;
 		while (!openList.isEmpty()) {
 			Location q = extractMin();
-			ArrayList<Location> neighbours = map.neighbors(q, tms == 0 && firstEmpty);
+			ArrayList<Location> neighbours = map.neighbors(q, tms == 0 && firstEmpty, false);
 			for (Location neighbour: neighbours) {
 				if (neighbour.equals(target)) {
 					prevs.put(target, q);
@@ -126,7 +126,7 @@ public class LRAstar extends Algorithm {
 
 	private LinkedList<Location> randomMove(Map map, Location loc) {
 		LinkedList<Location> rndMove = new LinkedList<Location>();
-		ArrayList<Location> neighbors = map.neighbors(loc, true);
+		ArrayList<Location> neighbors = map.neighbors(loc, true, false);
 		neighbors.add(loc);
 		
 		rndMove.add(neighbors.get(rndGenerator.nextInt(neighbors.size())));

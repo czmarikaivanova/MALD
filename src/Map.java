@@ -119,20 +119,22 @@ public class Map implements Iterable<Location> {
 		return grid[x][y];
 	}
 	
-	public ArrayList<Location> neighbors(Location loc, boolean onlyEmpty) {
+	public ArrayList<Location> neighbors(Location loc, boolean onlyEmpty, boolean diag) {
 		ArrayList<Location> neighbours = new ArrayList<Location>();
 		for (int dir1 = -1; dir1 <= 1; dir1++) {
 			for (int dir2 = -1; dir2 <= 1; dir2++) {
-				if (Math.abs(dir1) != Math.abs(dir2)) { // do not include the current node in BFS and do not consider diagonals
-					if (loc == null) {
-						System.out.println("loc null");
-					}
-					int x = loc.getX() + dir1;
-					int y = loc.getY() + dir2;
-					if (x >= 0 && x < height && y >= 0 && y < width) { // we should not get out of the map
-						Location adjLoc = getLocation(x, y);
-						if (!adjLoc.isObstacle() && (!onlyEmpty || (adjLoc.getAgent() == null))) { // it will not be null
-							neighbours.add(adjLoc);
+				if (dir1 != 0 || dir2 != 0) {
+					if ((Math.abs(dir1) != Math.abs(dir2)) || diag) { // do not include the current node in BFS and do not consider diagonals
+						if (loc == null) {
+							System.out.println("loc null");
+						}
+						int x = loc.getX() + dir1;
+						int y = loc.getY() + dir2;
+						if (x >= 0 && x < height && y >= 0 && y < width) { // we should not get out of the map
+							Location adjLoc = getLocation(x, y);
+							if (!adjLoc.isObstacle() && (!onlyEmpty || (adjLoc.getAgent() == null))) { // it will not be null
+								neighbours.add(adjLoc);
+							}
 						}
 					}
 				}

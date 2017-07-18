@@ -7,6 +7,7 @@ import java.util.LinkedList;
 public class PathFreqStrategy extends Strategy {
 
 	private boolean minCD;
+	private boolean useBrush;
 	
 	/**
 	 * 
@@ -15,9 +16,10 @@ public class PathFreqStrategy extends Strategy {
 	 * @param considerAgents - shell we consider agents as obstacles
 	 * @param minCD - shall we want the min cummulative distance
 	 */
-	public PathFreqStrategy(boolean multiStage, boolean relocate, int considerAgents, boolean minCD) {
+	public PathFreqStrategy(boolean multiStage, boolean relocate, int considerAgents, boolean minCD, boolean useBrush) {
 		super(multiStage, relocate, considerAgents);
 		this.minCD = minCD;
+		this.useBrush = useBrush;
 	}
 
 	/**
@@ -59,7 +61,7 @@ public class PathFreqStrategy extends Strategy {
 				System.err.println(mostFreqLoc.toString());
 				Square square = new Square(mostFreqLoc);
 				LinkedList<Location> bneck = square.expand(map, forbidden);
-				if (bneck == null) {
+				if (bneck == null) { // no bottleneck found
 					break;
 				}
 				assignLocations(bneck, agentsToAllocate, map);
@@ -115,10 +117,12 @@ public class PathFreqStrategy extends Strategy {
 		else {
 			int maxCD = 0; // for max distance
 			for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) {
-				int cd = tfl.getSecond().getSecond();
-				if (cd > maxCD) {
-					maxCD = cd;
-					bestLoc = tfl.getFirst();
+				if (!freqLocs.contains(tfl.getFirst())) {
+					int cd = tfl.getSecond().getSecond();
+					if (cd > maxCD) {
+						maxCD = cd;
+						bestLoc = tfl.getFirst();
+					}
 				}
 			}
 		}
@@ -135,12 +139,24 @@ public class PathFreqStrategy extends Strategy {
 		for (ArrayList<Location> path: paths) {
 			for (Location loc: path) {
 				Pair<Integer, Integer> vals = pathFreqsDists.get(loc);
-				if (vals == null) { // add a new entry, if this Location does not have value
+				if (vals == null) { // add a new entry, if this Lo8cation does not have value
 					pathFreqsDists.put(loc, new Pair<Integer, Integer>(1, path.indexOf(loc)));
 				}
 				else { // the entry exists, just update the values
 					int oldF = pathFreqsDists.get(loc).getFirst(); // old frequency of the location loc
 					int oldCD = pathFreqsDists.get(loc).getSecond(); // old cumulative distance of the locatoin loc
+					if  (useBrush) {
+						ArrayList<Location> neighbours = map.neighbors(loc, true, true);
+						for (Location nbr: neighbours) {
+							int oldFNbr = 0;
+							int oldCDNbr = 0;
+							if (pathFreqsDists.get(nbr) != null) {
+								oldFNbr = pathFreqsDists.get(nbr).getFirst(); // old frequency of the location loc
+								oldCDNbr = pathFreqsDists.get(nbr).getSecond();
+							}
+							pathFreqsDists.replace(nbr, new Pair<Integer, Integer>(oldFNbr + 1, oldCDNbr));		
+						}
+					}
 					pathFreqsDists.replace(loc, new Pair<Integer, Integer>(oldF + 1, oldCD + path.indexOf(loc))); 
 				}
 			}
@@ -181,7 +197,7 @@ public class PathFreqStrategy extends Strategy {
 	}
 
 	public String toString() {
-		return "SQUARE STRATEGY " + ( minCD ? "MinCD" : "MaxCD");
+		return "SQUARE STRATEGY " + ( minCD ? "MinCD" : "MaxCD") + (useBrush ? "Brush" : "");
 	}
 
 }

@@ -16,6 +16,7 @@ public class Main {
 	private static FileInputStream fileInputStream;
 	private static FileOutputStream fileOutputStream;
 	private static Random rndGen;
+	private static int maxIter = 3;
 	
 	private static ArrayList<Pair<Integer, Integer>> agentCoords;
 	private static ArrayList<Pair<Integer, Integer>> targetCoords; 
@@ -23,58 +24,58 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		for (int iter = 0; iter < 10; iter++) {
-		createdAgents = 0;
-		File input = new File("maps/isound6.map");
-		File input_new = new File("maps/isound6_new.map");
-		try {
-			copyFileUsingChannel(input, input_new);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		agentCoords = new ArrayList<Pair<Integer,Integer>>();
-		targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
-		
-		int offCnt = 60;
-		int defCnt = 30;
-		agentCnt = offCnt + defCnt;
-		int x1 = 2;
-		int y1 = 33;
-		int w1 = 20;
-		int h1 = 20;
-		int x2 = 33;
-		int y2 = 3;
-		int w2 = 20;
-		int h2 = 20;
-		rndGen = new Random(iter * 101);
-		System.out.println("seed: " + iter * 101);
-		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-		int x = 3;
-		int y = 3;
-		int w = 20;
-		int h = 20;
-		generateDeffensive(x,y,w,h,defCnt,input_new);
-		
-//		 offCnt = 60;
-//		 defCnt = 30;
-//		agentCnt = offCnt + defCnt;
-//		 x1 = 2;
-//		 y1 = 2;
-//		 w1 = 20;
-//		 h1 = 20;
-//		 x2 = 33;
-//		 y2 = 33;
-//		 w2 = 20;
-//		 h2 = 20;
-//		rndGen = new Random(1234567);
-//		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-//		 x = 2;
-//		 y = 2;
-//		 w = 20;
-//		 h = 20;
-//		generateDeffensive(x,y,w,h,defCnt,input_new);
-		new App(input_new);	
+		for (int iter = 0; iter < maxIter; iter++) {
+			createdAgents = 0;
+			File input = new File("maps/rooms1.map");
+			File input_new = new File("maps/rooms1_new.map");
+			try {
+				copyFileUsingChannel(input, input_new);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			agentCoords = new ArrayList<Pair<Integer,Integer>>();
+			targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
+			
+			int offCnt = 60;
+			int defCnt = 30;
+			agentCnt = offCnt + defCnt;
+			int x1 = 2;
+			int y1 = 2;
+			int w1 = 20;
+			int h1 = 20;
+			int x2 = 33;
+			int y2 = 58;
+			int w2 = 20;
+			int h2 = 20;
+			rndGen = new Random(iter * 444);
+			System.out.println("seed: " + iter * 444);
+			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
+			int x = 3;
+			int y = 2;
+			int w = 20;
+			int h = 20;
+			generateDeffensive(x,y,w,h,defCnt,input_new);
+			
+	//		 offCnt = 60;
+	//		 defCnt = 30;
+	//		agentCnt = offCnt + defCnt;
+	//		 x1 = 2;
+	//		 y1 = 2;
+	//		 w1 = 20;
+	//		 h1 = 20;
+	//		 x2 = 33;
+	//		 y2 = 33;
+	//		 w2 = 20;
+	//		 h2 = 20;
+	//		rndGen = new Random(1234567);
+	//		generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
+	//		 x = 2;
+	//		 y = 2;
+	//		 w = 20;
+	//		 h = 20;
+	//		generateDeffensive(x,y,w,h,defCnt,input_new);
+			new App(input_new);	
 		}
 	}
 
