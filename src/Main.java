@@ -43,7 +43,7 @@ public class Main {
 			int x1 = 2;
 			int y1 = 2;
 			int w1 = 20;
-			int h1 = 30;
+			int h1 = 20;
 			int x2 = 33;
 			int y2 = 56;
 			int w2 = 20;
