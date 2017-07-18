@@ -64,8 +64,10 @@ public class PathFreqStrategy extends Strategy {
 				if (bneck == null) { // no bottleneck found
 					break;
 				}
-				assignLocations(bneck, agentsToAllocate, map);
-				forbidden.addAll(bneck);
+				if (!alreadyAssigned(bneck)) { // if a bottleneck that has already been used is again selected, just ignore it. We should continue with another top-freq node
+					assignLocations(bneck, agentsToAllocate, map);
+					forbidden.addAll(bneck);
+				}
 //				pathFreqsDists.remove(mostFreqLoc); // possibly delete ??
 			}
 			else {
@@ -77,6 +79,15 @@ public class PathFreqStrategy extends Strategy {
 		}
 	}
 	
+	private boolean alreadyAssigned(LinkedList<Location> bneck) {
+		for (Location loc: bneck) {
+			if (!loc.isSomeDestination()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * return the location with the most frequent visits and the lowest cummulative distance.
 	 * @param pathFreqsDists HashMap mapping Locations to the pair of their visit frequency and cummulative distance
