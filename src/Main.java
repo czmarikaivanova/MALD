@@ -22,7 +22,7 @@ public class Main {
 	private static FileInputStream fileInputStream;
 	private static FileOutputStream fileOutputStream;
 	private static Random rndGen;
-	private static int maxIter = 3;
+	private static int maxIter = 1;
 	
 	private static ArrayList<Pair<Integer, Integer>> agentCoords;
 	private static ArrayList<Pair<Integer, Integer>> targetCoords; 
@@ -33,8 +33,8 @@ public class Main {
 	public static void main(String[] args) {
 		for (int iter = 0; iter < maxIter; iter++) {
 			createdAgents = 0;
-			File input = new File("maps/ost-small.map");
-			File input_new = new File("maps/ost-small_new.map");
+			File input = new File("maps/rooms1.map");
+			File input_new = new File("maps/rooms1_new.map");
 			try {
 				copyFileUsingChannel(input, input_new);
 			} catch (IOException e) {
@@ -47,22 +47,22 @@ public class Main {
 			int offCnt = 60;
 			int defCnt = 30;
 			agentCnt = offCnt + defCnt;
-			int x1 = 5;
-			int y1 = 60;
-			int w1 = 20;
-			int h1 = 20;
-			int x2 = 50;
-			int y2 = 140;
-			int w2 = 22;
-			int h2 = 22;
+			int x1 = 1;
+			int y1 = 1;
+			int w1 = 15;
+			int h1 = 15;
+			int x2 = 45;
+			int y2 = 55;
+			int w2 = 15;
+			int h2 = 15;
 			int seed = 11881;
 			rndGen = new Random(seed);
 			System.out.println(seed);
 			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-			int x = 20;
-			int y = 164;
-			int w = 20;
-			int h = 20;
+			int x = 1;
+			int y = 1;
+			int w = 15;
+			int h = 15;
 			generateDeffensive(x,y,w,h,defCnt,input_new);
 			
 	//		 offCnt = 60;
