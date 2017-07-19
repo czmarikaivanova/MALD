@@ -9,7 +9,7 @@ public class App {
 	private Map map;
 	private Team offAgents;
 	private Team defAgents;
-	private int maxMoves = 100;
+	private int maxMoves = 1000;
 	private ArrayList<Strategy> strategies;
 	
 	
