@@ -36,7 +36,7 @@ public abstract class Strategy {
 	 * randomly assign targets to offensive agents and calculate shortest paths
 	 * @return
 	 */
-	protected ArrayList<ArrayList<Location>> estimatePaths(int considerAgents, Map map, ArrayList<Location> forbidden) {
+	protected ArrayList<ArrayList<Location>> estimatePaths(Map map, ArrayList<Location> forbidden) {
 		ArrayList<ArrayList<Location>> paths = new ArrayList<ArrayList<Location>>();
 		ArrayList<Location> targets = map.getTargets();
 		int i = 0;
@@ -51,5 +51,10 @@ public abstract class Strategy {
 	
 	
 	protected abstract void allocateTargets();
+
+	public void reNew() {
+		firstRun = true;
+		
+	}
 	
 }

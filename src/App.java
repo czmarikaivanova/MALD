@@ -9,34 +9,16 @@ public class App {
 	private Map map;
 	private Team offAgents;
 	private Team defAgents;
-	private int maxMoves = 1000;
-	private ArrayList<Strategy> strategies;
+	int[][] resArray;
+	int maxMoves;
 	
-	
-	public App(File input) {
-		
+	public App(File input, ArrayList<Strategy> strategies, int[][] resArray, int maxMoves, int iter) {
+		this.resArray = resArray;
+		this.maxMoves = maxMoves;
 		initialize(input); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
-		strategies = new ArrayList<Strategy>();
-//		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-//		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, true));
-		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
-//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false));
-//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, true));
-
-		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
-		int[][] resArray = new int[maxMoves][strategies.size()];
-		
 		for (Strategy s: strategies) {
 			System.out.println("Starting strategy " + s.toString());
+			s.reNew();
 			initialize(input);
 			printState();
 			int moveCnt = 0;
@@ -46,7 +28,7 @@ public class App {
 	//			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
 				defAgents.playMove(map);
 				printState();
-				resArray[moveCnt][strategies.indexOf(s)] = offAgents.finishedCnt();
+				resArray[moveCnt][strategies.size() * iter + strategies.indexOf(s)] = offAgents.finishedCnt();
 				moveCnt++;
 			}
 			

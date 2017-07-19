@@ -50,7 +50,7 @@ public class BottleneckImprovedStrategy extends Strategy {
 			if (agentsToAllocate.size() < minF) {
 				break;
 			}
-			ArrayList<ArrayList<Location>> paths = estimatePaths(considerAgents, map, forbidden);
+			ArrayList<ArrayList<Location>> paths = estimatePaths(map, forbidden);
 			HashMap<ArrayList<Location>, Integer> bottleneckPassFreqs = calculateBottleneckFreqs(paths); 
 			bottleneck = getBottleNeckOfFreq(bottleneckPassFreqs, minF);
 			if (bottleneck != null) {
@@ -183,6 +183,9 @@ public class BottleneckImprovedStrategy extends Strategy {
 	}
 	
 
-
+	public void reNew() {
+		super.reNew();
+		bottlenecks = null;
+	}
 
 }

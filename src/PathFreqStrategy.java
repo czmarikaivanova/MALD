@@ -52,7 +52,7 @@ public class PathFreqStrategy extends Strategy {
 			if (agentsToAllocate.isEmpty()) {
 				break;
 			}
-			ArrayList<ArrayList<Location>> paths = estimatePaths(considerAgents, map, forbidden);
+			ArrayList<ArrayList<Location>> paths = estimatePaths(map, forbidden);
 			HashMap<Location, Pair<Integer, Integer>> pathFreqsDists = calculatePathFreqDists(paths);
 			mostFreqLoc = getMostFreqLoc(pathFreqsDists, freqLocs);
 			freqLocs.add(mostFreqLoc);
