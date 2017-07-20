@@ -22,7 +22,7 @@ public class Main {
 	private static FileInputStream fileInputStream;
 	private static FileOutputStream fileOutputStream;
 	private static Random rndGen;
-	private static int maxIter = 2;
+	private static int maxIter = 5;
 	private static int maxMoves = 150;
 	
 	private static ArrayList<Pair<Integer, Integer>> agentCoords;
@@ -38,14 +38,12 @@ public class Main {
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
 		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-//		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+//		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, true));
-		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, true, false));
+//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, true, false));
 
 		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
 		int[][] resArray = new int[maxMoves][strategies.size() * maxIter];
@@ -74,8 +72,8 @@ public class Main {
 			int y2 = 55;
 			int w2 = 15;
 			int h2 = 15;
-			int seed = 1 ;
-			rndGen = new Random(seed);
+			int seed = 111 ;
+			rndGen = new Random(seed *iter + 4 );
 			System.out.println(seed);
 			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
 			int x = 1;
