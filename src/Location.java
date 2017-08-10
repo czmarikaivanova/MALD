@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public class Location {
 	private int x;
 	private int y;
+	private float cx;
+	private float cy;
 	private int id;
 	private boolean obstacle;
 	private ArrayList<Agent> destinationsForAgents;
@@ -14,6 +16,8 @@ public class Location {
 		this.y = y;
 		this.id = id;
 		destinationsForAgents = new ArrayList<Agent>();
+		this.cx = (float) (x + 0.5);
+		this.cy = (float) (y + 0.5);
 	}
 
 	/**
@@ -46,6 +50,14 @@ public class Location {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public float getCX() {
+		return cx;
+	}
+	
+	public float getCY() {
+		return cy;
 	}
 
 	/**
