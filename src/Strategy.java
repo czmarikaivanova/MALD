@@ -57,4 +57,13 @@ public abstract class Strategy {
 		
 	}
 	
+	protected boolean sameLengts(ArrayList<ArrayList<Location>> paths, ArrayList<ArrayList<Location>> updatedPaths) {
+		for (int i = 0; i < paths.size(); i++) {
+			if (paths.get(i).size() != updatedPaths.get(i).size()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }

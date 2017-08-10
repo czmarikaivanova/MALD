@@ -27,18 +27,16 @@ public class App {
 				s.allocateTargets(map, defAgents, offAgents);
 	//			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
 				defAgents.playMove(map);
-				printState();
+//				printState();
 				resArray[moveCnt][strategies.size() * iter + strategies.indexOf(s)] = offAgents.finishedCnt();
 				moveCnt++;
 			}
-			
 		}
 		printState();
 		writeResultsToFile(strategies, resArray);
 		int finishedCnt = offAgents.finishedCnt();
 		System.out.println("### " + finishedCnt + "/" + offAgents.agentCnt() + " agents reached their destination");
 	}
-
 
 
 	private void printState() {
@@ -70,12 +68,13 @@ public class App {
 				}
 			}
 		}
+		offAgents.calculateCenterPoint();
+		defAgents.calculateCenterPoint();
 	}
 
 
-	
 	private void writeResultsToFile(ArrayList<Strategy> strategies, int[][] resArray) {
-		File f = new File("output/output" + new File("output/").listFiles().length + ".data" );
+		File f = new File("output/df-1-1-disc/output" + new File("output/df-1-1-disc/").listFiles().length + ".data" );
 		try {
 			f.createNewFile();
 			Writer output = new BufferedWriter(new FileWriter(f, true));

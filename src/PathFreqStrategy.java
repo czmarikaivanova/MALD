@@ -57,21 +57,28 @@ public class PathFreqStrategy extends Strategy {
 			mostFreqLoc = getMostFreqLoc(pathFreqsDists, freqLocs);
 			freqLocs.add(mostFreqLoc);
 			
-			if (mostFreqLoc != null) { // is it necessary???
+			if (mostFreqLoc != null) { //
 				System.err.println(mostFreqLoc.toString());
 				Square square = new Square(mostFreqLoc);
 				LinkedList<Location> bneck = square.expand(map, forbidden);
 				if (bneck == null) { // no bottleneck found
 					break;
 				}
+
 				if (!alreadyAssigned(bneck)) { // if a bottleneck that has already been used is again selected, just ignore it. We should continue with another top-freq node
-					assignLocations(bneck, agentsToAllocate, map);
+					
 					forbidden.addAll(bneck);
+					ArrayList<ArrayList<Location>> updatedPaths = estimatePaths(map, forbidden); // check if the paths has changed
+					if (!sameLengts(paths,updatedPaths)) { // asign only if the blocking of the new bottleneck will cause any change in the path estimation
+						assignLocations(bneck, agentsToAllocate, map);	
+					}
+					else {
+						// if the bottleneck is not eventually assigned, remove its locations from the forbidden lists
+						// because they are not scheduled for blocking at all.
+						forbidden.removeAll(bneck);
+					}
 				}
 //				pathFreqsDists.remove(mostFreqLoc); // possibly delete ??
-			}
-			else {
-				break;
 			}
 		} while (mostFreqLoc != null);
 		if (!agentsToAllocate.isEmpty()) {
@@ -79,17 +86,20 @@ public class PathFreqStrategy extends Strategy {
 		}
 	}
 	
+
+
 	private boolean alreadyAssigned(LinkedList<Location> bneck) {
 		for (Location loc: bneck) {
 			if (!loc.isSomeDestination()) {
 				return false;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**
-	 * return the location with the most frequent visits and the lowest cummulative distance.
+	 * return the location with the most frequent visits and the lowest cummulative distance. This location must not be selected in any previous step, 
+	 * which is ensured by the freqLocs list
 	 * @param pathFreqsDists HashMap mapping Locations to the pair of their visit frequency and cummulative distance
 	 * @return
 	 */
@@ -100,22 +110,25 @@ public class PathFreqStrategy extends Strategy {
 		Iterator<HashMap.Entry<Location, Pair<Integer, Integer>>> it = pathFreqsDists.entrySet().iterator();
 		while (it.hasNext()) {
 			HashMap.Entry<Location, Pair<Integer, Integer>> entry = (HashMap.Entry<Location, Pair<Integer, Integer>>)it.next();
-			int f = entry.getValue().getFirst();
-			if (f > maxF) {
-				topFreqLocs.clear();
-				maxF = f;
-				topFreqLocs.add(new Pair<Location, Pair<Integer, Integer>>(entry.getKey(), entry.getValue()));
-			}
-			if (f == maxF) {
-				topFreqLocs.add(new Pair<Location, Pair<Integer, Integer>>(entry.getKey(), entry.getValue()));
+			if (!freqLocs.contains(entry.getKey())) {
+				int f = entry.getValue().getFirst();
+				if (f > maxF) {
+					topFreqLocs.clear();
+					maxF = f;
+					topFreqLocs.add(new Pair<Location, Pair<Integer, Integer>>(entry.getKey(), entry.getValue()));
+				}
+				if (f == maxF) {
+					topFreqLocs.add(new Pair<Location, Pair<Integer, Integer>>(entry.getKey(), entry.getValue()));
+				}
 			}
 		}
 		//	From among the top frequency locations, choose the one with minimum cummulative distance
 //		Location bestLoc = topFreqLocs.get(0).getFirst();
 		Location bestLoc = null;
+	if (!topFreqLocs.isEmpty()) bestLoc = topFreqLocs.get(0).getFirst();
 		if (minCD) {
 			int minCD = Constants.INFINITY; // for min distance
-			for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) {
+			for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) { // should not be necessery as we will not add such an item to the topFreqList. The condition was moved above
 				if (!freqLocs.contains(tfl.getFirst())) {
 					int cd = tfl.getSecond().getSecond();
 					if (cd < minCD) {
@@ -127,7 +140,7 @@ public class PathFreqStrategy extends Strategy {
 		}
 		else {
 			int maxCD = 0; // for max distance
-			for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) {
+			for (Pair<Location, Pair<Integer, Integer>> tfl: topFreqLocs) {  // should not be necessery as we will not add such an item to the topFreqList. The condition was moved above
 				if (!freqLocs.contains(tfl.getFirst())) {
 					int cd = tfl.getSecond().getSecond();
 					if (cd > maxCD) {
@@ -146,12 +159,15 @@ public class PathFreqStrategy extends Strategy {
 	 * @return
 	 */
 	private HashMap<Location, Pair<Integer, Integer>> calculatePathFreqDists(ArrayList<ArrayList<Location>> paths) {
-		HashMap<Location, Pair<Integer, Integer>> pathFreqsDists = new HashMap<Location, Pair<Integer, Integer>>(); 
+		int[] distsToCenter = new BFS(0).distsToLocation(map, defTeam.getCenterPoint());
+		HashMap<Location, Pair<Integer, Integer>> pathFreqsDists = new HashMap<Location, Pair<Integer, Integer>>();
 		for (ArrayList<Location> path: paths) {
 			for (Location loc: path) {
+				
 				Pair<Integer, Integer> vals = pathFreqsDists.get(loc);
 				if (vals == null) { // add a new entry, if this Lo8cation does not have value
-					pathFreqsDists.put(loc, new Pair<Integer, Integer>(1, path.indexOf(loc)));
+					pathFreqsDists.put(loc, new Pair<Integer, Integer>(1, distsToCenter[loc.getId()]));
+//					pathFreqsDists.put(loc, new Pair<Integer, Integer>(1, path.indexOf(loc)));
 				}
 				else { // the entry exists, just update the values
 					int oldF = pathFreqsDists.get(loc).getFirst(); // old frequency of the location loc
@@ -168,7 +184,8 @@ public class PathFreqStrategy extends Strategy {
 							pathFreqsDists.replace(nbr, new Pair<Integer, Integer>(oldFNbr + 1, oldCDNbr));		
 						}
 					}
-					pathFreqsDists.replace(loc, new Pair<Integer, Integer>(oldF + 1, oldCD + path.indexOf(loc))); 
+					pathFreqsDists.replace(loc, new Pair<Integer, Integer>(oldF + 1, oldCD)); 
+//					pathFreqsDists.replace(loc, new Pair<Integer, Integer>(oldF + 1, oldCD + path.indexOf(loc))); 
 				}
 			}
 		}

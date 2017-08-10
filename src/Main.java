@@ -22,14 +22,14 @@ public class Main {
 	private static FileInputStream fileInputStream;
 	private static FileOutputStream fileOutputStream;
 	private static Random rndGen;
-	private static int maxIter = 5;
+	private static int maxIter = 10;
 	private static int maxMoves = 150;
 	
 	private static ArrayList<Pair<Integer, Integer>> agentCoords;
 	private static ArrayList<Pair<Integer, Integer>> targetCoords; 
 	private static ArrayList<Pair<Integer, Integer>> obstacleCoords; 
 	/**
-	 * @param args
+//	 * @param args
 	 */
 	public static void main(String[] args) {
 		
@@ -38,20 +38,22 @@ public class Main {
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
 		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+//		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, true));
-//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, true, false));
+		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, true, false));
 
 		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
 		int[][] resArray = new int[maxMoves][strategies.size() * maxIter];
 		
 		for (int iter = 0; iter < maxIter; iter++) {
 			createdAgents = 0;
-			File input = new File("maps/rooms1.map");
-			File input_new = new File("maps/rooms1_new.map");
+//			File input = new File("maps/empty.map");
+//			File input_new = new File("maps/empty_new.map");
+			File input = new File("maps/df.map");
+			File input_new = new File("maps/df_new2.map");
 			try {
 				copyFileUsingChannel(input, input_new);
 			} catch (IOException e) {
@@ -61,25 +63,24 @@ public class Main {
 			targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			obstacleCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			readObstacleCoords(input_new);
-			int offCnt = 60;
-			int defCnt = 30;
+			int offCnt = 100;
+			int defCnt = 100;
 			agentCnt = offCnt + defCnt;
-			int x1 = 1;
-			int y1 = 1;
-			int w1 = 15;
-			int h1 = 15;
-			int x2 = 45;
-			int y2 = 55;
-			int w2 = 15;
-			int h2 = 15;
-			int seed = 111 ;
+			int x1 = 55;
+			int y1 = 70;
+			int w1 = 20;
+			int h1 = 20;
+			int x2 = 60;
+			int y2 = 1; // start now!
+			int w2 = 20;
+			int h2 = 20;
+			int seed = 76316;
 			rndGen = new Random(seed *iter + 4 );
-			System.out.println(seed);
 			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-			int x = 1;
-			int y = 1;
-			int w = 15;
-			int h = 15;
+			int x = 8;
+			int y = 10;
+			int w = 20;
+			int h = 20;
 			generateDeffensive(x,y,w,h,defCnt,input_new);
 			
 	//		 offCnt = 60;

@@ -54,8 +54,18 @@ public class BottleneckImprovedStrategy extends Strategy {
 			HashMap<ArrayList<Location>, Integer> bottleneckPassFreqs = calculateBottleneckFreqs(paths); 
 			bottleneck = getBottleNeckOfFreq(bottleneckPassFreqs, minF);
 			if (bottleneck != null) {
-				assignBottleneck(bottleneck, agentsToAllocate, map); // items in agentsToAllocate are removed inside this call
 				forbidden.addAll(bottleneck);
+				
+//				ArrayList<ArrayList<Location>> updatedPaths = estimatePaths(map, forbidden); // check if the paths has changed
+//				if (!sameLengts(paths,updatedPaths)) { // asign only if the blocking of the new bottleneck will cause any change in the path estimation
+					assignBottleneck(bottleneck, agentsToAllocate, map);	
+//				}
+//				else {
+					// if the bottleneck is not eventually assigned, remove its locations from the forbidden lists
+					// because they are not scheduled for blocking at all.
+//					forbidden.removeAll(bottleneck );
+//				}
+				
 				bottleneckPassFreqs.remove(bottleneck);
 			}
 			else {

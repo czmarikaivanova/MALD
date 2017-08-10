@@ -15,6 +15,7 @@ public class Team implements Iterable<Agent> {
 
 	private Map map;
 	private Team otherTeam;
+	private Location centerPoint;
 	
 	/**
 	 * constructor
@@ -183,6 +184,22 @@ public class Team implements Iterable<Agent> {
 	 */
 	public void shuffle() {
 		Collections.shuffle(agents, new Random(111));
+	}
+
+	public void calculateCenterPoint() {
+		int x = 0;
+		int y = 0;
+		for (Agent a: agents) {
+			x += a.getCurrentLocation().getX();
+			y += a.getCurrentLocation().getY();
+		}
+		x = x / agentCnt();
+		y = y / agentCnt();
+		centerPoint = map.getLocation(x, y);
+	}
+
+	public Location getCenterPoint() {
+		return centerPoint;
 	}
 	
 //	/**

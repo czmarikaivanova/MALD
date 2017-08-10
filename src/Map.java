@@ -45,10 +45,12 @@ public class Map implements Iterable<Location> {
 	private int height;
 	private int locationCount;
 	private int agentCnt;
+	Random rndGen;
 
 
 	public Map(File input) {
 		super();
+		rndGen = new Random(1);
 		String extension = "";
 		int i = input.getName().lastIndexOf('.');
 		if (i > 0) {
@@ -140,7 +142,8 @@ public class Map implements Iterable<Location> {
 				}
 			}
 		}
-		Collections.shuffle(neighbours, new Random(1));
+//		Collections.shuffle(neighbours, new Random(1));
+		Collections.shuffle(neighbours, rndGen);
 		return neighbours;
 	}
 
@@ -253,6 +256,7 @@ public class Map implements Iterable<Location> {
 				targets.add(target);
 			}
 		}
+
 	}
 	
 	/**
@@ -283,11 +287,12 @@ public class Map implements Iterable<Location> {
 						String mapLine = br.readLine();
 						for (int j = 0; j < width; j++) {
 							if (mapLine.charAt(j) != Constants.TERRAIN_CHAR) {
-								grid[i][j].setObstacle();
+								grid[(int) (i)][(int) (j)].setObstacle();
 							}
 						}
 					}
 				}
+
 				else if (line.matches("Agents.*")) {
 					int agentGroupCnt =  Integer.parseInt(br.readLine());
 					agentCnt += agentGroupCnt;
@@ -310,6 +315,7 @@ public class Map implements Iterable<Location> {
 					}
 				}
 			}
+
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
