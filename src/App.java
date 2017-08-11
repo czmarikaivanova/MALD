@@ -16,6 +16,14 @@ public class App {
 		this.resArray = resArray;
 		this.maxMoves = maxMoves;
 		initialize(input); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
+		
+		Location loc1 = map.getLocation(2, 1);
+		Location loc2 = map.getLocation(1, 3);
+		Line line = new Line(loc1, loc2);
+		ArrayList<Pair<Float, Float>> iSections = line.getInterSections();
+		System.exit(0);
+		
+		
 		for (Strategy s: strategies) {
 			System.out.println("Starting strategy " + s.toString());
 			s.reNew();
