@@ -14,13 +14,43 @@ public class Line {
 	}
 	
 	public ArrayList<Pair<Float, Float>> getInterSections() {
+
 		ArrayList<Float> mxList = calculateMs(l1.getCX(), l2.getCX());
 		ArrayList<Float> myList = calculateMs(l1.getCY(), l2.getCY());
-		ArrayList<Float> txList = calculateTList(mxList, l1.getCX(), l2.getCX());
-		ArrayList<Float> tyList = calculateTList(myList, l1.getCY(), l2.getCY());
-		return calculateIntersections(txList, tyList, mxList, myList, l1, l2);
+		if (isHorizontalOrVertical()) {
+			return calculateHVIntersections(mxList, myList);
+		}
+		else {
+			ArrayList<Float> txList = calculateTList(mxList, l1.getCX(), l2.getCX());
+			ArrayList<Float> tyList = calculateTList(myList, l1.getCY(), l2.getCY());
+			return calculateIntersections(txList, tyList, mxList, myList);
+		}
+
 	}
 	
+	private ArrayList<Pair<Float, Float>> calculateHVIntersections(ArrayList<Float> mxList, ArrayList<Float> myList) {
+		ArrayList<Pair<Float, Float>> intersectionList = new ArrayList<Pair<Float, Float>>();
+		if (l1.getCX() == l2.getCX()) {
+			for (Float f: myList) {
+				intersectionList.add(new Pair<Float, Float>(l1.getCX(), f));
+			}
+		}
+		else {
+			for (Float f: mxList) {
+				intersectionList.add(new Pair<Float, Float>(f, (float) l1.getCY()));
+			}
+		}
+		return intersectionList;
+	}
+
+	/**
+	 * determine whether the line is horizontal or vertical. Has same X or Y coordinates
+	 * @return
+	 */
+	private boolean isHorizontalOrVertical() {
+		return (l1.getX() == l2.getX() || l1.getY() == l2.getY());
+	}
+
 	/**
 	 * Determine grid coordinates (x or y) depending on the input coordinates
 	 * @return
@@ -57,7 +87,7 @@ public class Line {
 		return TList;
 	}
 	
-	private ArrayList<Pair<Float, Float>> calculateIntersections(ArrayList<Float> txList, ArrayList<Float> tyList, ArrayList<Float> mxList, ArrayList<Float> myList, Location l1, Location l2) {
+	private ArrayList<Pair<Float, Float>> calculateIntersections(ArrayList<Float> txList, ArrayList<Float> tyList, ArrayList<Float> mxList, ArrayList<Float> myList) {
 		ArrayList<Pair<Float, Float>> intersectionList = new ArrayList<Pair<Float, Float>>();
 		int xi = 0;
 		int yi = 0;
