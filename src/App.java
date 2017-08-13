@@ -17,11 +17,18 @@ public class App {
 		this.maxMoves = maxMoves;
 		initialize(input); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
 		
-		Location loc1 = map.getLocation(0, 0);
-		Location loc2 = map.getLocation(1, 4);
+		Location loc1 = map.getLocation(1, 1);
+		Location loc2 = map.getLocation(5, 1);
 		Line line = new Line(loc1, loc2);
 		ArrayList<Pair<Float, Float>> iSections = line.getInterSections();
-		System.out.print(iSections);
+		System.out.println(iSections);
+		System.out.println(line.locsOnLine(iSections, map));
+		if (line.hasObstacles(map)) {
+			System.out.println("Is NOT see through");
+		}
+		else {
+			System.out.println("Is see through");
+		}
 		System.exit(0);
 		
 		
