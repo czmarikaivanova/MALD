@@ -9,6 +9,8 @@ public class Location {
 	private boolean obstacle;
 	private ArrayList<Agent> destinationsForAgents;
 	private Agent agent;
+	private int linId;
+	
 	
 	public Location(int x, int y, int id) {
 		super();
@@ -18,6 +20,7 @@ public class Location {
 		destinationsForAgents = new ArrayList<Agent>();
 		this.cx = (float) (x + 0.5);
 		this.cy = (float) (y + 0.5);
+		this.linId = -1; // in case of a free location it will be changed to something non negative
 	}
 
 	/**
@@ -122,4 +125,13 @@ public class Location {
 		return (loc.x == this.x) && (loc.y == this.y);
 	}
 
+	public int getLinId() {
+		return linId;
+	}
+	
+	public void setLinId(int linId) {
+		this.linId = linId;
+	}
+	
+	
 }

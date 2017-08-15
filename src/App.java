@@ -29,6 +29,7 @@ public class App {
 		else {
 			System.out.println("Is see through");
 		}
+//		System.out.println(map.toStringVis());
 		System.exit(0);
 		
 		

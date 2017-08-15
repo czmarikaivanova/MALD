@@ -193,8 +193,10 @@ public class Team implements Iterable<Agent> {
 			x += a.getCurrentLocation().getX();
 			y += a.getCurrentLocation().getY();
 		}
-		x = x / agentCnt();
-		y = y / agentCnt();
+		if (agentCnt() > 0) {
+			x = x / agentCnt();
+			y = y / agentCnt();
+		}
 		centerPoint = map.getLocation(x, y);
 	}
 

@@ -30,21 +30,12 @@ public class Map implements Iterable<Location> {
 	private DocumentBuilder dBuilder;
 	private Document doc;
 	private NodeList nList;
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
 	private Location[][] grid;
+	private boolean[][] visGraph;
 	private ArrayList<Location> targets;
 	private int width;
 	private int height;
 	private int locationCount;
-	private int agentCnt;
 	Random rndGen;
 
 
@@ -78,8 +69,40 @@ public class Map implements Iterable<Location> {
 			readMap(input);
 		}
 		locationCount = width * height;
+		createVisibilityGraph();
 	}
 
+	private void createVisibilityGraph() {
+		int noObstCnt = setLinIds();
+		visGraph = new boolean[noObstCnt][noObstCnt];
+		for (Location loc1: this) {
+			for (Location loc2: this) {
+				if (loc1 != loc2 && !loc1.isObstacle() && !loc2.isObstacle()) {
+					Line line = new Line(loc1, loc2);
+					visGraph[loc1.getLinId()][loc2.getLinId()] = !line.hasObstacles(this);
+				}
+			}
+			System.out.println(loc1);
+		}
+	}
+
+	/**
+	 * assign a unique linear id for a non-obstacle location
+	 * 
+	 * @return the last id - number of non-obstacle locaitons
+	 */
+	private int setLinIds() {
+		int id = 0;
+		for (Location loc: this) {
+			if (!loc.isObstacle()) {
+				loc.setLinId(id);
+				id++;
+			}
+		}
+		return id;
+	}
+
+	
 	public int getLocationCount() {
 		return locationCount;
 	}
@@ -109,6 +132,22 @@ public class Map implements Iterable<Location> {
 //			mapStr += t.toString() + "\n";
 //		}
 		return mapStr;
+	}
+	
+	public String toStringVis() {
+		String s = "";
+		for (int i = 0; i < visGraph.length; i++) {
+			for (int j = 0; j < visGraph[i].length; j++) {
+				if (visGraph[i][j]) {
+					s += "1 ";
+				}
+				else {
+					s += "0 ";
+				}
+			}
+			s += "\n";
+		}
+		return s;
 	}
 	
 	/**
@@ -295,7 +334,6 @@ public class Map implements Iterable<Location> {
 
 				else if (line.matches("Agents.*")) {
 					int agentGroupCnt =  Integer.parseInt(br.readLine());
-					agentCnt += agentGroupCnt;
 					String agentLine;
 					String[] agentLineSplit;
  					for (int i = 0; i < agentGroupCnt; i++) {
@@ -370,5 +408,11 @@ public class Map implements Iterable<Location> {
 		return true;
 	}
 
+	public int getWidth() {
+		return width;
+	}
 
+	public int getHeight() {
+		return height;
+	}
 }

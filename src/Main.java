@@ -52,8 +52,8 @@ public class Main {
 			createdAgents = 0;
 //			File input = new File("maps/empty.map");
 //			File input_new = new File("maps/empty_new.map");
-			File input = new File("maps/rm.map");
-			File input_new = new File("maps/rm_new2.map");
+			File input = new File("maps/df.map");
+			File input_new = new File("maps/df_new2.map");
 			try {
 				copyFileUsingChannel(input, input_new);
 			} catch (IOException e) {
@@ -63,24 +63,24 @@ public class Main {
 			targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			obstacleCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			readObstacleCoords(input_new);
-			int offCnt = 10;
-			int defCnt = 10;
+			int offCnt = 0;
+			int defCnt = 0;
 			agentCnt = offCnt + defCnt;
 			int x1 = 0;
 			int y1 = 0;
-			int w1 = 20;
-			int h1 = 20;
+			int w1 = 4;
+			int h1 = 4;
 			int x2 = 0;
 			int y2 = 1; // start now!
-			int w2 = 20;
-			int h2 = 20;
+			int w2 = 4;
+			int h2 = 4;
 			int seed = 76316;
 			rndGen = new Random(seed *iter + 4 );
 			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-			int x = 8;
-			int y = 10;
-			int w = 20;
-			int h = 20;
+			int x = 2;
+			int y = 2;
+			int w = 4;
+			int h = 4;
 			generateDeffensive(x,y,w,h,defCnt,input_new);
 			
 	//		 offCnt = 60;
