@@ -10,11 +10,9 @@ import java.util.stream.Collectors;
 
 public class Team implements Iterable<Agent> {
 	private ArrayList<Agent> agents;
-	private ArrayList<Location> targets;
 	private int id;
 
 	private Map map;
-	private Team otherTeam;
 	private Location centerPoint;
 	
 	/**
@@ -26,8 +24,6 @@ public class Team implements Iterable<Agent> {
 		agents = new ArrayList<Agent>();
 		
 		this.map = map;
-		this.otherTeam = otherTeam;
-		this.targets = map.getTargets();
 	}
 	
 	/**
@@ -155,8 +151,8 @@ public class Team implements Iterable<Agent> {
 	private  class DegreeOfFreedomComparator implements Comparator<Agent> {
 		private Map map;
 		public int compare(Agent o1, Agent o2) {
-			int o1FreedomDeg = map.neighbors(o1.getCurrentLocation(), true, false).size();
-			int o2FreedomDeg = map.neighbors(o2.getCurrentLocation(), true, false).size();
+			int o1FreedomDeg = map.neighbors(o1.getCurrentLocation(), true, false, false).size();
+			int o2FreedomDeg = map.neighbors(o2.getCurrentLocation(), true, false, false).size();
 			return Integer.compare(o2FreedomDeg, o1FreedomDeg);
 		}
 		public DegreeOfFreedomComparator(Map map) {

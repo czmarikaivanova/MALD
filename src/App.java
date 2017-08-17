@@ -15,28 +15,11 @@ public class App {
 	public App(File input, ArrayList<Strategy> strategies, int[][] resArray, int maxMoves, int iter) {
 		this.resArray = resArray;
 		this.maxMoves = maxMoves;
-		initialize(input); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
-		
-		Location loc1 = map.getLocation(1, 1);
-		Location loc2 = map.getLocation(5, 1);
-		Line line = new Line(loc1, loc2);
-		ArrayList<Pair<Float, Float>> iSections = line.getInterSections();
-		System.out.println(iSections);
-		System.out.println(line.locsOnLine(iSections, map));
-		if (line.hasObstacles(map)) {
-			System.out.println("Is NOT see through");
-		}
-		else {
-			System.out.println("Is see through");
-		}
-//		System.out.println(map.toStringVis());
-		System.exit(0);
-		
-		
+		initialize(input, false); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
 		for (Strategy s: strategies) {
 			System.out.println("Starting strategy " + s.toString());
 			s.reNew();
-			initialize(input);
+			initialize(input, true);
 			printState();
 			int moveCnt = 0;
 			while (!offAgents.finished() && moveCnt < maxMoves) {
@@ -44,7 +27,7 @@ public class App {
 				s.allocateTargets(map, defAgents, offAgents);
 	//			defAgents.allocateTargetsBottlenecks(bottlenecks, false, Constants.CONSIDER_AGENTS_NONE);  // scecond parameter true if we want to reallocate agents that have reached their targets
 				defAgents.playMove(map);
-//				printState();
+				printState();
 				resArray[moveCnt][strategies.size() * iter + strategies.indexOf(s)] = offAgents.finishedCnt();
 				moveCnt++;
 			}
@@ -66,9 +49,10 @@ public class App {
 	 * initialize map and agents 
 	 * @param input File describing the initial configuration
 	 */
-	private void initialize(File input) {
-		map = new Map(input);
+	private void initialize(File input, boolean shouldCreateVisMap) {
+		map = new Map(input, shouldCreateVisMap);
 		createAgents();
+		map.setDefenders(defAgents);
 	}
 
 	private void createAgents() {

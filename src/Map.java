@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,13 +9,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.Stack;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,13 +28,15 @@ public class Map implements Iterable<Location> {
 	private Location[][] grid;
 	private boolean[][] visGraph;
 	private ArrayList<Location> targets;
+//	private ArrayList<Location> nonObstLocatoins;
 	private int width;
 	private int height;
 	private int locationCount;
 	Random rndGen;
+	Team defenders;
 
 
-	public Map(File input) {
+	public Map(File input, boolean shouldCreateVisMap) {
 		super();
 		rndGen = new Random(1);
 		String extension = "";
@@ -69,9 +66,14 @@ public class Map implements Iterable<Location> {
 			readMap(input);
 		}
 		locationCount = width * height;
-		createVisibilityGraph();
+		if (shouldCreateVisMap) {
+			createVisibilityGraph();
+		}
 	}
 
+	/**
+	 * fill the boolean 2D array of visibility and also create a list of all non-obstacle locations indexed by their linear ID.
+	 */
 	private void createVisibilityGraph() {
 		int noObstCnt = setLinIds();
 		visGraph = new boolean[noObstCnt][noObstCnt];
@@ -82,19 +84,20 @@ public class Map implements Iterable<Location> {
 					visGraph[loc1.getLinId()][loc2.getLinId()] = !line.hasObstacles(this);
 				}
 			}
-			System.out.println(loc1);
 		}
 	}
 
 	/**
-	 * assign a unique linear id for a non-obstacle location
+	 * assign a unique linear id for a non-obstacle location and create an array list indexed by lin IDs
 	 * 
 	 * @return the last id - number of non-obstacle locaitons
 	 */
 	private int setLinIds() {
+//		nonObstLocatoins = new ArrayList<>();
 		int id = 0;
 		for (Location loc: this) {
 			if (!loc.isObstacle()) {
+//				nonObstLocatoins.add(loc);
 				loc.setLinId(id);
 				id++;
 			}
@@ -160,7 +163,7 @@ public class Map implements Iterable<Location> {
 		return grid[x][y];
 	}
 	
-	public ArrayList<Location> neighbors(Location loc, boolean onlyEmpty, boolean diag) {
+	public ArrayList<Location> neighbors(Location loc, boolean onlyEmpty, boolean diag, boolean mustBeConnected) {
 		ArrayList<Location> neighbours = new ArrayList<Location>();
 		for (int dir1 = -1; dir1 <= 1; dir1++) {
 			for (int dir2 = -1; dir2 <= 1; dir2++) {
@@ -174,7 +177,9 @@ public class Map implements Iterable<Location> {
 						if (x >= 0 && x < height && y >= 0 && y < width) { // we should not get out of the map
 							Location adjLoc = getLocation(x, y);
 							if (!adjLoc.isObstacle() && (!onlyEmpty || (adjLoc.getAgent() == null))) { // it will not be null
-								neighbours.add(adjLoc);
+								if (!mustBeConnected || isConnected(loc, adjLoc)) {
+									neighbours.add(adjLoc);
+								}
 							}
 						}
 					}
@@ -184,6 +189,60 @@ public class Map implements Iterable<Location> {
 //		Collections.shuffle(neighbours, new Random(1));
 		Collections.shuffle(neighbours, rndGen);
 		return neighbours;
+	}
+
+	/**
+	 * Using DFS check whether the induced visibility subgraph is connected
+	 * @param loc the original location
+	 * @param adjLoc the neighbour for whcih we want to check whether the connectivity is preserved
+	 * @return
+	 */
+	public boolean isConnected(Location loc, Location adjLoc) {
+		ArrayList<Location> locstoProcess = new ArrayList<Location>();
+		ArrayList<Location> locsThatShouldBeConnected= new ArrayList<Location>();
+		ArrayList<Location> visitedLocs = new ArrayList<>();
+		locstoProcess.add(adjLoc);
+		for (Agent a: defenders) {
+			if (a.getCurrentLocation() != loc) { // we don't want to connect with loc, because it is the place that we are leaving
+				locstoProcess.add(a.getCurrentLocation());
+			}
+		}
+		locsThatShouldBeConnected.addAll(locstoProcess);
+		Stack<Location> stack = new Stack<Location>();
+		stack.push(adjLoc);
+		while (!stack.empty()) {
+			Location locFromStack = stack.pop();
+			if (!visitedLocs.contains(locFromStack)) {
+				visitedLocs.add(locFromStack);
+				locstoProcess.remove(locFromStack);
+				ArrayList<Location> visNeighbours = getVisNeighbours(locFromStack, loc, locsThatShouldBeConnected);
+				for (Location vNeigh: visNeighbours) {
+					if (!visitedLocs.contains(vNeigh) && !stack.contains(vNeigh)) {
+//						if (locstoProcess.contains(vNeigh)) {
+						stack.push(vNeigh);
+					}
+				}
+			}
+		}
+		return locstoProcess.isEmpty();
+	}
+
+	
+	/**
+	 * for a given location give all the visible locations
+	 * @param locFromStack
+	 * @param leftLoc
+	 * @return
+	 */
+	private ArrayList<Location> getVisNeighbours(Location locFromStack, Location leftLoc, ArrayList<Location> locsThatShouldBeConnected) {
+		ArrayList<Location> visNeighbours = new ArrayList<Location>();
+		int stackLocLinId = locFromStack.getLinId();
+		for (Location locToCon: locsThatShouldBeConnected) {
+			if (visGraph[stackLocLinId][locToCon.getLinId()]) {
+				visNeighbours.add(locToCon);
+			}
+		}
+		return visNeighbours;
 	}
 
 	/**
@@ -414,5 +473,10 @@ public class Map implements Iterable<Location> {
 
 	public int getHeight() {
 		return height;
+	}
+
+	public void setDefenders(Team defAgents) {
+		this.defenders = defAgents;
+		
 	}
 }

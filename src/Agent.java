@@ -59,7 +59,7 @@ public class Agent  {
 		if (atTarget()) {
 			return;
 		}
-		if (path == null || path.size() == 0 || path.getFirst().getAgent() != null) {
+		if (path == null || path.size() == 0 || path.getFirst().getAgent() != null || !map.isConnected(myCurrentLocation, path.getFirst())) {
 			path = algorithm.findPath(myCurrentLocation, targetLocation, map);
 		}
 		Location newLoc =  path.remove();

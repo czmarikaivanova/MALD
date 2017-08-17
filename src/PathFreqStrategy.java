@@ -173,7 +173,7 @@ public class PathFreqStrategy extends Strategy {
 					int oldF = pathFreqsDists.get(loc).getFirst(); // old frequency of the location loc
 					int oldCD = pathFreqsDists.get(loc).getSecond(); // old cumulative distance of the locatoin loc
 					if  (useBrush) {
-						ArrayList<Location> neighbours = map.neighbors(loc, true, true);
+						ArrayList<Location> neighbours = map.neighbors(loc, true, true, false); // does not have to be connected, therefore false
 						for (Location nbr: neighbours) {
 							int oldFNbr = 0;
 							int oldCDNbr = 0;

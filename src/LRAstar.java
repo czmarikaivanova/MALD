@@ -16,7 +16,6 @@ public class LRAstar extends Algorithm {
 	private boolean firstEmpty;
 	
 	
-	
 	public LRAstar(boolean firstEmpty) {
 		super();
 		this.rndGenerator = new Random(100);
@@ -38,8 +37,10 @@ public class LRAstar extends Algorithm {
 		int tms = 0;
 		while (!openList.isEmpty()) {
 			Location q = extractMin();
-			ArrayList<Location> neighbours = map.neighbors(q, tms == 0 && firstEmpty, false);
-			for (Location neighbour: neighbours) {
+			boolean firstStep = tms == 0;
+			boolean mustBeConnected = firstStep && q.getAgent().getTeam() == Constants.DEFENSIVE_TEAM;
+			ArrayList<Location> neighbours = map.neighbors(q, firstStep && firstEmpty, false, mustBeConnected);
+			for (Location neighbour: neighbours) { // breakpoint only if defenders' turn
 				if (neighbour.equals(target)) {
 					prevs.put(target, q);
 					return constructPath(map, start, target);
@@ -124,9 +125,15 @@ public class LRAstar extends Algorithm {
 		return constructedPath;
     }
 
+    /**
+     * random move must lead to a connected position. Therefore last parameter true
+     * @param map
+     * @param loc
+     * @return
+     */
 	private LinkedList<Location> randomMove(Map map, Location loc) {
 		LinkedList<Location> rndMove = new LinkedList<Location>();
-		ArrayList<Location> neighbors = map.neighbors(loc, true, false);
+		ArrayList<Location> neighbors = map.neighbors(loc, true, false, true); 
 		neighbors.add(loc);
 		
 		rndMove.add(neighbors.get(rndGenerator.nextInt(neighbors.size())));
