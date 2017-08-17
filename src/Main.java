@@ -52,8 +52,8 @@ public class Main {
 			createdAgents = 0;
 //			File input = new File("maps/empty.map");
 //			File input_new = new File("maps/empty_new.map");
-			File input = new File("maps/small2.map");
-			File input_new = new File("maps/small2_new2.map");
+			File input = new File("maps/small.map");
+			File input_new = new File("maps/small_new.map");
 			try {
 				copyFileUsingChannel(input, input_new);
 			} catch (IOException e) {
@@ -63,8 +63,8 @@ public class Main {
 			targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			obstacleCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			readObstacleCoords(input_new);
-			int offCnt = 8;
-			int defCnt = 8;
+			int offCnt = 0;
+			int defCnt = 0;
 			agentCnt = offCnt + defCnt;
 			int x1 = 14;
 			int y1 = 1;

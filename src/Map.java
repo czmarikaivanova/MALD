@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -21,12 +22,15 @@ import org.xml.sax.SAXException;
 
 public class Map implements Iterable<Location> {
 
+	private static final int maxVisDst = 5;
+	
 	private DocumentBuilderFactory dbFactory;
 	private DocumentBuilder dBuilder;
 	private Document doc;
 	private NodeList nList;
 	private Location[][] grid;
 	private boolean[][] visGraph;
+	private int[][] dstGraph;
 	private ArrayList<Location> targets;
 //	private ArrayList<Location> nonObstLocatoins;
 	private int width;
@@ -68,11 +72,12 @@ public class Map implements Iterable<Location> {
 		locationCount = width * height;
 		if (shouldCreateVisMap) {
 			createVisibilityGraph();
+			createDistanceGraph();
 		}
 	}
 
 	/**
-	 * fill the boolean 2D array of visibility and also create a list of all non-obstacle locations indexed by their linear ID.
+	 * fill the boolean 2D array of visibility 
 	 */
 	private void createVisibilityGraph() {
 		int noObstCnt = setLinIds();
@@ -82,6 +87,57 @@ public class Map implements Iterable<Location> {
 				if (loc1 != loc2 && !loc1.isObstacle() && !loc2.isObstacle()) {
 					Line line = new Line(loc1, loc2);
 					visGraph[loc1.getLinId()][loc2.getLinId()] = !line.hasObstacles(this);
+				}
+			}
+		}
+	}
+
+	/**
+	 *
+	 * @param l1
+	 * @param l2
+	 * @return return a distance between two locations 
+	 */
+	public int getDst(Location l1, Location l2) {
+		if (l1.isObstacle() || l2.isObstacle()) {
+			System.err.println("no distance data for obstacles");
+		}
+		return dstGraph[l1.getLinId()][l2.getLinId()];
+	}
+	
+	
+	/**
+	 * 
+	 * @param id1
+	 * @param id2
+	 * @return return a distance between two locations given their IDs
+	 */
+	public int getDst(int id1, int id2) {
+		Location l1 = getLocationById(id1);
+		Location l2 = getLocationById(id2);
+		if (l1.isObstacle() || l2.isObstacle()) {
+			System.err.println("no distance data for obstacles");
+		}
+		return dstGraph[l1.getLinId()][l2.getLinId()];
+	}
+	
+	
+	/**
+	 * fill the int 2D array of (Manhattan) distances between every two locations 
+	 */
+	private void createDistanceGraph() {
+		int noObstCnt = setLinIds();
+		dstGraph = new int[noObstCnt][noObstCnt];
+		for (Location loc1: this) {
+			if (!loc1.isObstacle()) {
+				BFS bfs = new BFS(Constants.CONSIDER_AGENTS_NONE);
+				int[] dsts = bfs.distsToLocation(this, loc1);
+				int id = 0;
+				for (int dst: dsts) {
+					if (!this.getLocationById(id).isObstacle()) {
+						dstGraph[loc1.getLinId()][this.getLocationById(id).getLinId()] = dst;
+					}
+					id ++;
 				}
 			}
 		}
@@ -153,6 +209,17 @@ public class Map implements Iterable<Location> {
 		return s;
 	}
 	
+	public String toStringDst() {
+		String s = "";
+		for (int i = 0; i < dstGraph.length; i++) {
+			for (int j = 0; j < dstGraph[i].length; j++) {
+				s += String.format("%3d", dstGraph[i][j]);
+			}
+			s += "\n";
+		}
+		return s;
+	}
+	
 	/**
 	 * return the Location in the map
 	 * @param x - coordinate
@@ -160,6 +227,12 @@ public class Map implements Iterable<Location> {
 	 * @return
 	 */
 	public Location getLocation(int x, int y) {
+		return grid[x][y];
+	}
+	
+	public Location getLocationById(int id) {
+		int x = id / width;
+		int y = id % width;
 		return grid[x][y];
 	}
 	
@@ -479,4 +552,6 @@ public class Map implements Iterable<Location> {
 		this.defenders = defAgents;
 		
 	}
+
+
 }

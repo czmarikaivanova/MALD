@@ -15,12 +15,22 @@ public class App {
 	public App(File input, ArrayList<Strategy> strategies, int[][] resArray, int maxMoves, int iter) {
 		this.resArray = resArray;
 		this.maxMoves = maxMoves;
-		initialize(input, false); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
+		initialize(input, true); // this initialization is only for the bottleneck calculation. Otherwise it we initialize the map before every strategy starts
+	
+		
+		Location l1 = map.getLocation(1, 1);
+		Location l2 = map.getLocation(2, 3);
+		System.out.println("Dst between " + l1.toString() + " and " + l2.toString() + " is " + map.getDst(l1, l2));
+		System.out.println(map.toStringDst());
+		printState();
+		System.exit(0);
+		
+		
 		for (Strategy s: strategies) {
 			System.out.println("Starting strategy " + s.toString());
 			s.reNew();
 			initialize(input, true);
-			printState();
+
 			int moveCnt = 0;
 			while (!offAgents.finished() && moveCnt < maxMoves) {
 				offAgents.playMove(map);
