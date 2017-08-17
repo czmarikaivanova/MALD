@@ -71,8 +71,8 @@ public class Map implements Iterable<Location> {
 		}
 		locationCount = width * height;
 		if (shouldCreateVisMap) {
-			createVisibilityGraph();
 			createDistanceGraph();
+			createVisibilityGraph();
 		}
 	}
 
@@ -84,7 +84,7 @@ public class Map implements Iterable<Location> {
 		visGraph = new boolean[noObstCnt][noObstCnt];
 		for (Location loc1: this) {
 			for (Location loc2: this) {
-				if (loc1 != loc2 && !loc1.isObstacle() && !loc2.isObstacle()) {
+				if (loc1 != loc2 && !loc1.isObstacle() && !loc2.isObstacle() && dstGraph[loc1.getLinId()][loc2.getLinId()] <= maxVisDst) {
 					Line line = new Line(loc1, loc2);
 					visGraph[loc1.getLinId()][loc2.getLinId()] = !line.hasObstacles(this);
 				}
@@ -288,7 +288,7 @@ public class Map implements Iterable<Location> {
 			if (!visitedLocs.contains(locFromStack)) {
 				visitedLocs.add(locFromStack);
 				locstoProcess.remove(locFromStack);
-				ArrayList<Location> visNeighbours = getVisNeighbours(locFromStack, loc, locsThatShouldBeConnected);
+				ArrayList<Location> visNeighbours = getVisNeighbours(locFromStack, locsThatShouldBeConnected);
 				for (Location vNeigh: visNeighbours) {
 					if (!visitedLocs.contains(vNeigh) && !stack.contains(vNeigh)) {
 //						if (locstoProcess.contains(vNeigh)) {
@@ -307,7 +307,7 @@ public class Map implements Iterable<Location> {
 	 * @param leftLoc
 	 * @return
 	 */
-	private ArrayList<Location> getVisNeighbours(Location locFromStack, Location leftLoc, ArrayList<Location> locsThatShouldBeConnected) {
+	private ArrayList<Location> getVisNeighbours(Location locFromStack, ArrayList<Location> locsThatShouldBeConnected) {
 		ArrayList<Location> visNeighbours = new ArrayList<Location>();
 		int stackLocLinId = locFromStack.getLinId();
 		for (Location locToCon: locsThatShouldBeConnected) {

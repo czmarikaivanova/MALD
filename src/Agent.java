@@ -61,6 +61,7 @@ public class Agent  {
 		}
 		if (path == null || path.size() == 0 || path.getFirst().getAgent() != null || !map.isConnected(myCurrentLocation, path.getFirst())) {
 			path = algorithm.findPath(myCurrentLocation, targetLocation, map);
+
 		}
 		Location newLoc =  path.remove();
 		makeMove(map, newLoc);

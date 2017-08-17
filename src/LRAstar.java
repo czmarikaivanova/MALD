@@ -27,10 +27,13 @@ public class LRAstar extends Algorithm {
 		closedList = new LinkedList<Location>();
 		ghValues = new HashMap<Location, Pair<Integer,Integer>>();
 		prevs = new HashMap<Location, Location>();
-			dstsToTarget = new BFS(Constants.CONSIDER_AGENTS_NONE).distsToLocation(map, target);
+//		dstsToTarget = new BFS(Constants.CONtSIDER_AGENTS_NONE).distsToLocation(map, target);
 		for (Location loc: map) {
-			int dst = dstsToTarget[loc.getId()];
-			ghValues.put(loc, new Pair<Integer, Integer>(Constants.INFINITY, dst));
+//			int dst = dstsToTarget[loc.getId()];
+			if (!loc.isObstacle()) {
+				int dst1 = map.getDst(loc, target);
+				ghValues.put(loc, new Pair<Integer, Integer>(Constants.INFINITY, dst1));
+			}
 		}
 		ghValues.put(start, new Pair<Integer, Integer>(0,0));
 		openList.add(start);
@@ -48,8 +51,9 @@ public class LRAstar extends Algorithm {
 				if (neighbour.getAgent() == null || neighbour.getAgent().getTeam() == start.getAgent().getTeam() && !neighbour.isSomeDestination()) {
 					int distanceToMinNode = ghValues.get(q).getFirst();
 					int n_g = distanceToMinNode + 1;
-					int n_h = dstsToTarget[neighbour.getId()];
-					ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, n_h));
+//					int n_h = dstsToTarget[neighbour.getId()];
+					int n_h1 = map.getDst(neighbour, target);
+					ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, n_h1));
 					 
 	                 int alt = n_g + ghValues.get(neighbour).getSecond();
 	                 int fValofN = ghValues.get(neighbour).getFirst() + ghValues.get(neighbour).getSecond();
@@ -59,7 +63,8 @@ public class LRAstar extends Algorithm {
 	                 if (closedList.contains(neighbour) && fValofN <= alt) {
 	                     continue;
 	                 }
-	                 ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, dstsToTarget[neighbour.getId()]));
+//	                 ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, dstsToTarget[neighbour.getId()]));
+	                 ghValues.put(neighbour, new Pair<Integer, Integer>(n_g, map.getDst(neighbour, target)));
 	                 openList.add(neighbour);
 	                 prevs.put(neighbour, q);
 				}
