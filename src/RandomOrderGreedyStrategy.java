@@ -25,18 +25,28 @@ public class RandomOrderGreedyStrategy extends Strategy {
 		targets = map.getTargets();
 		ArrayList<Location> availableTargets = new ArrayList<Location>(targets); 
 		defTeam.shuffle();
+		int normalDefCnt = defTeam.agentCnt() - comCnt;   // we want to allocate all defenders except those that are supposed to be communicators.
+		int assignedDefenders = 0;
 		for (Agent agent: defTeam) {
 			if (availableTargets== null || availableTargets.size() == 0) {
 				System.err.println("No more available targets");
 				System.exit(1);
 			}
+			if (assignedDefenders >= normalDefCnt) {
+				break;
+			}
 			if (agent.getTargetLocation() == null) { // allocate agent only if he hasn't any target yet
+				assignedDefenders ++;
 				Location myNewTarget = agent.getClosestLocation(availableTargets, considerAgents);
 				agent.setTargetLocation(myNewTarget);
 				availableTargets.remove(myNewTarget);
 			}
 		}	
+		// now all normal defenders are allocated. We should now compute the connected components and allocate
+		// remaining defenders to the positions suitable for communication
+		allocateCommunicators();
 	}
+
 
 	public String toString() {
 		return "RND GREEDY STRATEGY" + considerAgents;

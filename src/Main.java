@@ -34,7 +34,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		ArrayList<Strategy> strategies = new ArrayList<Strategy>();
-		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+//		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
 //		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
@@ -43,7 +43,7 @@ public class Main {
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, true));
-//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
+		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
 
 		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
 		int[][] resArray = new int[maxMoves][strategies.size() * maxIter];
@@ -74,7 +74,7 @@ public class Main {
 			int y2 = 1; // start now!
 			int w2 = 4;
 			int h2 = 18;
-			int seed = 776183764;
+			int seed = 776183767;
 			rndGen = new Random(seed);
 			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
 			int x = 14;

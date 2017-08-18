@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
 
 public class Map implements Iterable<Location> {
 
-	private static final int maxVisDst = 5;
+	private static final int maxVisDst = 10;
 	
 	private DocumentBuilderFactory dbFactory;
 	private DocumentBuilder dBuilder;
@@ -303,11 +303,13 @@ public class Map implements Iterable<Location> {
 	
 	/**
 	 * for a given location give all the visible locations
+	 * There are many visible locations, but we usually want only those who are e.g. occupied by an agent or those that are targets.
+	 * That's why we have the parameter locsThatShouldBeConnected
 	 * @param locFromStack
-	 * @param leftLoc
+	 * @param locsThatShouldBeConnected - set of locations which should be connected. 
 	 * @return
 	 */
-	private ArrayList<Location> getVisNeighbours(Location locFromStack, ArrayList<Location> locsThatShouldBeConnected) {
+	public ArrayList<Location> getVisNeighbours(Location locFromStack, ArrayList<Location> locsThatShouldBeConnected) {
 		ArrayList<Location> visNeighbours = new ArrayList<Location>();
 		int stackLocLinId = locFromStack.getLinId();
 		for (Location locToCon: locsThatShouldBeConnected) {
@@ -551,6 +553,16 @@ public class Map implements Iterable<Location> {
 	public void setDefenders(Team defAgents) {
 		this.defenders = defAgents;
 		
+	}
+
+	/**
+	 * determine whether two locations can 'see' each other. I. e. If they corresponding entry in visibility graph is true
+	 * @param ccLoc
+	 * @param loc
+	 * @return
+	 */
+	public boolean canSeeEachOther(Location ccLoc, Location loc) {
+		return visGraph[ccLoc.getLinId()][loc.getLinId()];
 	}
 
 
