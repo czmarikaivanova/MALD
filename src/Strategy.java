@@ -1,6 +1,9 @@
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.Stack;
 
 public abstract class Strategy {
@@ -13,8 +16,8 @@ public abstract class Strategy {
 	protected Team defTeam;
 	protected Team offTeam;
 	protected Map map;
-	protected int comCnt;
-	protected static final double percentage = 0.1;
+	protected int normalDefCnt;
+
 	
 	public Strategy(boolean multiStage, boolean relocate, int considerAgents) {
 		this.multiStage = multiStage;
@@ -30,7 +33,6 @@ public abstract class Strategy {
 		this.map = map;
 		this.targets = map.getTargets();
 		if (firstRun || multiStage) {
-			comCnt = (int) Math.ceil(defTeam.agentCnt() * percentage);
 			firstRun = false;
 			allocateTargets();
 		}
@@ -66,28 +68,58 @@ public abstract class Strategy {
 	 * that cover the highest number of components. Among them, we select the one that maximizes the number of visible 
 	 * targets in the component with minimum covered nodes.
 	 */
-	protected void allocateCommunicators() {
+	protected void allocateCommunicators(ArrayList<Agent> communicators) {
 		ArrayList<Location> assignedTargets = new ArrayList<>();
-		ArrayList<Agent> unallocatedAgents = new ArrayList<Agent>();
 		for (Agent a: defTeam) { // the normal defenders (those that are already assigned a target should come first (TODO: confirm. )
 			if (a.getTargetLocation() != null) {
 				assignedTargets.add(a.getTargetLocation());
 			}
-			else {
-				unallocatedAgents.add(a);
-			}
 		}
-		ArrayList<ArrayList<Location>> conComps = determineConComps(assignedTargets); 			// find all connected components on assigned targets defined by the visibility graph 
+		PriorityQueue<ArrayList<Location>> conComps = determineConComps(assignedTargets); 			// find all connected components on assigned targets defined by the visibility graph 
 		ArrayList<ArrayList<Location>> conCompsToCover = new ArrayList<ArrayList<Location>>(); 	// connected components to be covered
 		conCompsToCover.addAll(conComps); 														// initially equal to the set of all CCs
-		for (Agent a: unallocatedAgents) {
-//		for (int i = communicatorFirstIdx; i < defTeam.agentCnt(); i++) {
-			Pair<Location, ArrayList<ArrayList<Location>>> comPointAndCoveredComps = findComPoint(conCompsToCover);
-			a.setTargetLocation(comPointAndCoveredComps.getFirst());
-			conCompsToCover.removeAll(comPointAndCoveredComps.getSecond());
+		while (!communicators.isEmpty()) {						// while I have some communicators left
+			while (!conCompsToCover.isEmpty()) {				// while there are CCs to cover
+				Pair<Location, ArrayList<ArrayList<Location>>> comPointAndCoveredComps = findComPoint(conCompsToCover);  // find a location that covers most CCs and the potentially covered CCs
+				Location targetToAssign = comPointAndCoveredComps.getFirst();											  
+				Agent closestAgent = getClosestAgent(communicators, targetToAssign);									 // find the available communicator closest to the location found above
+				closestAgent.setTargetLocation(targetToAssign);															 // set target of the available communicator 
+				assignedTargets.add(targetToAssign);																	 // insert the new target to the set of already assigned targets
+				conCompsToCover.removeAll(comPointAndCoveredComps.getSecond());											 // Remove the components covered by the target from the set of CCs to coveer
+				communicators.remove(closestAgent);																		 // Remove the allocated communicater from the set of available communicators
+				if (communicators.isEmpty()) { // this can happen in the inner loop		
+					break;
+				}
+			}
+			conComps = determineConComps(assignedTargets);		// at this point 
+			conCompsToCover.addAll(conComps);
 		}
+//		for (Agent a: communicators) {
+//			Pair<Location, ArrayList<ArrayList<Location>>> comPointAndCoveredComps = findComPoint(conCompsToCover);
+//			a.setTargetLocation(comPointAndCoveredComps.getFirst());
+//			conCompsToCover.removeAll(comPointAndCoveredComps.getSecond());
+//		}
 	}
 	
+	/**
+	 * find an agent that is closest ot the given location
+	 * @param communicators set of available agents
+	 * @param targetToAssign given target location
+	 * @return
+	 */
+	private Agent getClosestAgent(ArrayList<Agent> communicators, Location targetToAssign) {
+		Agent closestAgent = communicators.get(0);
+		int minDst = Constants.INFINITY;
+		for (Agent a: communicators) {
+			int dst = map.getDst(a.getCurrentLocation(), targetToAssign);
+			if (dst < minDst) {
+				minDst = dst;
+				closestAgent = a;
+			}
+		}
+		return closestAgent;
+	}
+
 	/**
 	 * Here we find the location that will be assigned as a target to the next defender who is supposed to be a communicator.
 	 * It will be the locations that covers the maximum number of not yet covered connected components.
@@ -100,7 +132,14 @@ public abstract class Strategy {
 		for (Location loc: map) {
 			if (!loc.isObstacle()) {
 				ArrayList<ArrayList<Location>> coveredComps = findCoveredComps(loc, conCompsToCover);
-				if (coveredComps.size() > maxCoveredComps.size()) { // we found a best covering location so far
+				if (coveredComps.size() == maxCoveredComps.size()) { // if we find a  location that is as good as a previously found one, we will update the values with probability 1/2.
+					Random rnd = new Random(1);
+					if (rnd.nextInt(2) == 1) {
+						maxCoveredComps = coveredComps;
+						maxCoveringLoc = loc;
+					}
+				}
+				else if (coveredComps.size() > maxCoveredComps.size()) { // we found a best covering location so far
 					maxCoveredComps = coveredComps;
 					maxCoveringLoc = loc;
 				}
@@ -142,21 +181,22 @@ public abstract class Strategy {
 
 	/**
 	 * Create arraylists of assigned targets that are located so that they form a connected component
-	 * @param assignedTargets - list of assigned targets. If one cc is found, its locations are removed from this list
+	 * @param assignedTargetsCopy - list of assigned targets. If one cc is found, its locations are removed from this list
 	 * @return
 	 */
-	private ArrayList<ArrayList<Location>> determineConComps(ArrayList<Location> assignedTargets) {
-		ArrayList<ArrayList<Location>> conComps = new ArrayList<>();
-		while (!assignedTargets.isEmpty()) {
+	protected PriorityQueue<ArrayList<Location>> determineConComps(ArrayList<Location> assignedTargets) {
+		ArrayList<Location> assignedTargetsCopy = new ArrayList<>(assignedTargets);
+		PriorityQueue<ArrayList<Location>> conComps = new PriorityQueue<ArrayList<Location>>(new ListLengthComparator());
+		while (!assignedTargetsCopy.isEmpty()) {
 			ArrayList<Location> visited = new ArrayList<>();
 	        Stack<Location> stack= new Stack<Location>();
-	        Location v = assignedTargets.get(0);
+	        Location v = assignedTargetsCopy.get(0);
 	        stack.push(v);
 	        while (!stack.isEmpty()) {
 	       	Location u = stack.pop();
 	           if (!visited.contains(u)) {
 	               visited.add(u);
-	               ArrayList<Location> visNeighbours = map.getVisNeighbours(u, assignedTargets);
+	               ArrayList<Location> visNeighbours = map.getVisNeighbours(u, assignedTargetsCopy);
 	               for (Location neigh: visNeighbours) {
 	            	   if (!visited.contains(neigh)) {
 	            		   stack.push(neigh);
@@ -165,9 +205,32 @@ public abstract class Strategy {
 	           }
 	        }
 	        conComps.add(visited);
-	        assignedTargets.removeAll(visited);
+	        assignedTargetsCopy.removeAll(visited);
 		}
 		return conComps;
+	}
+	
+
+	/**
+	 * divide the team of defenders into two lists - normal defenders and communicators. 
+	 * The ration between these two sets is given by the constant "percentage" and is set to 0.9
+	 * @return
+	 */
+	protected Pair<ArrayList<Agent>, ArrayList<Agent>> divideAgentsIntoDefAndComcomCnt() {
+		ArrayList<Agent> normalDefenders = new ArrayList<>();
+		ArrayList<Agent> communicators = new ArrayList<>();
+		int i = 0;
+		int normalDefCnt = (int) Math.floor(defTeam.agentCnt() * 0.9);
+		for (Agent a: defTeam) {
+			if (i < normalDefCnt) {
+				normalDefenders.add(a);
+			}
+			else {
+				communicators.add(a);
+			}
+			i++;
+		}
+		return new Pair<>(normalDefenders, communicators);
 	}
 
 	protected boolean sameLengts(ArrayList<ArrayList<Location>> paths, ArrayList<ArrayList<Location>> updatedPaths) {
@@ -177,6 +240,27 @@ public abstract class Strategy {
 			}
 		}
 		return true;
+	}
+	
+	private  class ListLengthComparator implements Comparator<ArrayList>
+	{
+	    @Override
+	    public int compare(ArrayList x, ArrayList y)
+	    {
+	        // Assume neither string is null. Real code should
+	        // probably be more robust
+	        // You could also just return x.length() - y.length(),
+	        // which would be more efficient.
+	        if (x.size() < y.size())
+	        {
+	            return 1;
+	        }
+	        if (x.size() > y.size())
+	        {
+	            return -1;
+	        }
+	        return 0;
+	    }
 	}
 	
 }

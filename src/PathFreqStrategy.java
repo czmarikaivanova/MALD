@@ -88,7 +88,7 @@ public class PathFreqStrategy extends Strategy {
 	
 
 
-	private boolean alreadyAssigned(LinkedList<Location> bneck) {
+	protected boolean alreadyAssigned(LinkedList<Location> bneck) {
 		for (Location loc: bneck) {
 			if (!loc.isSomeDestination()) {
 				return false;
@@ -103,7 +103,7 @@ public class PathFreqStrategy extends Strategy {
 	 * @param pathFreqsDists HashMap mapping Locations to the pair of their visit frequency and cummulative distance
 	 * @return
 	 */
-	private Location getMostFreqLoc(HashMap<Location, Pair<Integer, Integer>> pathFreqsDists, ArrayList<Location> freqLocs) {
+	protected Location getMostFreqLoc(HashMap<Location, Pair<Integer, Integer>> pathFreqsDists, ArrayList<Location> freqLocs) {
 		ArrayList<Pair<Location, Pair<Integer, Integer>>> topFreqLocs = new ArrayList<Pair<Location, Pair<Integer, Integer>>>(); 
 		// create the list of top frequency Locations
 		int maxF = 0;
@@ -158,7 +158,7 @@ public class PathFreqStrategy extends Strategy {
 	 * @param paths
 	 * @return
 	 */
-	private HashMap<Location, Pair<Integer, Integer>> calculatePathFreqDists(ArrayList<ArrayList<Location>> paths) {
+	protected HashMap<Location, Pair<Integer, Integer>> calculatePathFreqDists(ArrayList<ArrayList<Location>> paths) {
 		int[] distsToCenter = new BFS(0).distsToLocation(map, defTeam.getCenterPoint());
 		HashMap<Location, Pair<Integer, Integer>> pathFreqsDists = new HashMap<Location, Pair<Integer, Integer>>();
 		for (ArrayList<Location> path: paths) {
@@ -202,7 +202,7 @@ public class PathFreqStrategy extends Strategy {
 	 * @param bottleneck - locations to be assinged
 	 * @param agentsToAllocate agents that still haven't been allocated and can be used
 	 */
-	private void assignLocation(Location loc, ArrayList<Agent> agentsToAllocate, Map map) {
+	protected void assignLocation(Location loc, ArrayList<Agent> agentsToAllocate, Map map) {
 		Collections.sort(agentsToAllocate, new DistToLocationComparator(map, loc)); // can be faster by placing in front of cycle, with a minor loss of accuracy
 		Agent a = agentsToAllocate.remove(0);
 		a.setTargetLocation(loc);
@@ -213,7 +213,7 @@ public class PathFreqStrategy extends Strategy {
 	 * @param bottleneck - locations to be assinged
 	 * @param agentsToAllocate agents that still haven't been allocated and can be used
 	 */
-	private void assignLocations(LinkedList<Location> locs, ArrayList<Agent> agentsToAllocate, Map map) {
+	protected void assignLocations(LinkedList<Location> locs, ArrayList<Agent> agentsToAllocate, Map map) {
 		for (Location loc: locs) {
 			if (agentsToAllocate.size() == 0) {
 				return;

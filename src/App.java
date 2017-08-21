@@ -86,7 +86,7 @@ public class App {
 
 
 	private void writeResultsToFile(ArrayList<Strategy> strategies, int[][] resArray) {
-		File f = new File("output/df-1-1-disc/output" + new File("output/df-1-1-disc/").listFiles().length + ".data" );
+		File f = new File("output/comm/rm-1-1/output" + new File("output/comm/rm-1-1/").listFiles().length + ".data" );
 		try {
 			f.createNewFile();
 			Writer output = new BufferedWriter(new FileWriter(f, true));

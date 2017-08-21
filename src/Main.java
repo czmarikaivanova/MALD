@@ -36,13 +36,13 @@ public class Main {
 		ArrayList<Strategy> strategies = new ArrayList<Strategy>();
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
+//		strategies.add(new RandomOrderGreedyCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
 //		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, true));
+		strategies.add(new PathFreqCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
 		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
 
 		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
@@ -52,8 +52,8 @@ public class Main {
 			createdAgents = 0;
 //			File input = new File("maps/empty.map");
 //			File input_new = new File("maps/empty_new.map");
-			File input = new File("maps/small2.map");
-			File input_new = new File("maps/small2_new.map");
+			File input = new File("maps/comm-rm.map");
+			File input_new = new File("maps/comm-rm_new.map");
 			try {
 				copyFileUsingChannel(input, input_new);
 			} catch (IOException e) {
@@ -63,24 +63,24 @@ public class Main {
 			targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			obstacleCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			readObstacleCoords(input_new);
-			int offCnt = 8;
-			int defCnt = 8;
+			int offCnt = 50;
+			int defCnt = 50;
 			agentCnt = offCnt + defCnt;
-			int x1 = 14;
+			int x1 = 40;
 			int y1 = 1;
-			int w1 = 4;
-			int h1 = 18;
+			int w1 = 10;
+			int h1 = 20;
 			int x2 = 1;
-			int y2 = 1; // start now!
-			int w2 = 4;
-			int h2 = 18;
-			int seed = 776183767;
+			int y2 = 52; // start now!
+			int w2 = 30;
+			int h2 = 15;
+			int seed = 111;
 			rndGen = new Random(seed);
 			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-			int x = 14;
-			int y = 4;
-			int w = 4;
-			int h = 14;
+			int x = 40;
+			int y = 1;
+			int w = 10;
+			int h = 20;
 			generateDeffensive(x,y,w,h,defCnt,input_new);
 			
 	//		 offCnt = 60;
@@ -101,7 +101,7 @@ public class Main {
 	//		 w = 20;
 	//		 h = 20;
 	//		generateDeffensive(x,y,w,h,defCnt,input_new);
-			new App(input_new, strategies, resArray, maxMoves, iter);	
+			new App(input_new, strategies, resArray, maxMoves, iter);
 		}
 	}
 
