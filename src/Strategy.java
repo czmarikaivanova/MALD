@@ -17,7 +17,9 @@ public abstract class Strategy {
 	protected Team offTeam;
 	protected Map map;
 	protected int normalDefCnt;
-
+	private static final double DEF_PERCENTAGE = 0.9;
+	
+	
 	public Strategy(boolean multiStage, boolean relocate, int considerAgents) {
 		this.multiStage = multiStage;
 		this.reallocate = relocate;
@@ -213,7 +215,7 @@ public abstract class Strategy {
 		ArrayList<Agent> normalDefenders = new ArrayList<>();
 		ArrayList<Agent> communicators = new ArrayList<>();
 		int i = 0;
-		int normalDefCnt = (int) Math.floor(defTeam.agentCnt() * 0.9);
+		int normalDefCnt = (int) Math.floor(defTeam.agentCnt() * DEF_PERCENTAGE);
 		for (Agent a: defTeam) {
 			if (i < normalDefCnt) {
 				normalDefenders.add(a);

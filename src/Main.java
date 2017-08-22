@@ -36,14 +36,14 @@ public class Main {
 		ArrayList<Strategy> strategies = new ArrayList<Strategy>();
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-//		strategies.add(new RandomOrderGreedyCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new RandomOrderGreedyCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
 //		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-		strategies.add(new PathFreqCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
-		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
+//		strategies.add(new PathFreqCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
+//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
 
 		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
 		int[][] resArray = new int[maxMoves][strategies.size() * maxIter];
@@ -64,7 +64,7 @@ public class Main {
 			obstacleCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			readObstacleCoords(input_new);
 			int offCnt = 50;
-			int defCnt = 50;
+			int defCnt = 25;
 			agentCnt = offCnt + defCnt;
 			int x1 = 40;
 			int y1 = 1;
