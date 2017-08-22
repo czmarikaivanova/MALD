@@ -18,7 +18,6 @@ public abstract class Strategy {
 	protected Map map;
 	protected int normalDefCnt;
 
-	
 	public Strategy(boolean multiStage, boolean relocate, int considerAgents) {
 		this.multiStage = multiStage;
 		this.reallocate = relocate;
@@ -54,7 +53,6 @@ public abstract class Strategy {
 		}
 		return paths;
 	}
-	
 	
 	protected abstract void allocateTargets();
 
@@ -94,11 +92,6 @@ public abstract class Strategy {
 			conComps = determineConComps(assignedTargets);		// at this point 
 			conCompsToCover.addAll(conComps);
 		}
-//		for (Agent a: communicators) {
-//			Pair<Location, ArrayList<ArrayList<Location>>> comPointAndCoveredComps = findComPoint(conCompsToCover);
-//			a.setTargetLocation(comPointAndCoveredComps.getFirst());
-//			conCompsToCover.removeAll(comPointAndCoveredComps.getSecond());
-//		}
 	}
 	
 	/**
@@ -242,6 +235,11 @@ public abstract class Strategy {
 		return true;
 	}
 	
+	/**
+	 * Comparator that compares two lists according to their length
+	 * @author marika
+	 *
+	 */
 	private  class ListLengthComparator implements Comparator<ArrayList>
 	{
 	    @Override
