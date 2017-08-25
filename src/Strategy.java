@@ -17,7 +17,7 @@ public abstract class Strategy {
 	protected Team offTeam;
 	protected Map map;
 	protected int normalDefCnt;
-	private static final double DEF_PERCENTAGE = 0.9;
+	private static final double DEF_PERCENTAGE = 0.8;
 	
 	
 	public Strategy(boolean multiStage, boolean relocate, int considerAgents) {
@@ -124,23 +124,46 @@ public abstract class Strategy {
 	private Pair<Location, ArrayList<ArrayList<Location>>> findComPoint(ArrayList<ArrayList<Location>> conCompsToCover) {
 		ArrayList<ArrayList<Location>> maxCoveredComps = new ArrayList<ArrayList<Location>>();
 		Location maxCoveringLoc = null;
+		int maxCoveredCompCard = 0;
+		int minSumDst = Constants.INFINITY;
 		for (Location loc: map) {
 			if (!loc.isObstacle()) {
 				ArrayList<ArrayList<Location>> coveredComps = findCoveredComps(loc, conCompsToCover);
-				if (coveredComps.size() == maxCoveredComps.size()) { // if we find a  location that is as good as a previously found one, we will update the values with probability 1/2.
-					Random rnd = new Random(1);
-					if (rnd.nextInt(2) == 1) {
+//				if (coveredComps.size() >= maxCoveredComps.size()) {
+				int coveredCompCard = compCardinality(coveredComps);
+				if (coveredCompCard >= maxCoveredCompCard) {
+					int sumDst = map.calculatedSumDstToTargets(loc);
+					if (sumDst < minSumDst || coveredCompCard > maxCoveredCompCard) {
+						minSumDst = sumDst;
 						maxCoveredComps = coveredComps;
+						maxCoveredCompCard = coveredCompCard;
 						maxCoveringLoc = loc;
 					}
 				}
-				else if (coveredComps.size() > maxCoveredComps.size()) { // we found a best covering location so far
-					maxCoveredComps = coveredComps;
-					maxCoveringLoc = loc;
-				}
+//				if (coveredComps.size() == maxCoveredComps.size()) { // if we find a  location that is as good as a previously found one, we will update the values with probability 1/2.
+//					Random rnd = new Random(1);
+//					if (rnd.nextInt(2) == 1) {
+//						maxCoveredComps = coveredComps;
+//						maxCoveringLoc = loc;
+//					}
+//				}
+//				else if (coveredComps.size() > maxCoveredComps.size()) { // we found a best covering location so far
+//					maxCoveredComps = coveredComps;
+//					maxCoveringLoc = loc;
+//				}
 			}
 		}
 		return new Pair<Location, ArrayList<ArrayList<Location>>>(maxCoveringLoc, maxCoveredComps);
+	}
+
+
+
+	private int compCardinality(ArrayList<ArrayList<Location>> coveredComps) {
+		int locCnt = 0;
+		for (ArrayList<Location> cc: coveredComps) {
+			locCnt += cc.size();
+		}
+		return locCnt;
 	}
 
 	/**

@@ -22,7 +22,7 @@ public class Main {
 	private static FileInputStream fileInputStream;
 	private static FileOutputStream fileOutputStream;
 	private static Random rndGen;
-	private static int maxIter = 1;
+	private static int maxIter = 10;
 	private static int maxMoves = 150;
 	
 	private static ArrayList<Pair<Integer, Integer>> agentCoords;
@@ -34,26 +34,25 @@ public class Main {
 	public static void main(String[] args) {
 		
 		ArrayList<Strategy> strategies = new ArrayList<Strategy>();
-//		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_ALL));
-		strategies.add(new RandomOrderGreedyCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new Greedy2Strategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new BottleneckImprovedStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
-//		strategies.add(new PathFreqCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
-//		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
 
-		//		strategies.add(new BottleneckStrategy(false, false, Constants.CONSIDER_AGENTS_OPPONENT));
+		strategies.add(new RandomStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new RandomCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		
+		strategies.add(new RandomOrderGreedyStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+		strategies.add(new RandomOrderGreedyCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE));
+
+		strategies.add(new PathFreqStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
+		strategies.add(new PathFreqCommunicationStrategy(false, false, Constants.CONSIDER_AGENTS_NONE, false, false));
+
+		
 		int[][] resArray = new int[maxMoves][strategies.size() * maxIter];
 		
 		for (int iter = 0; iter < maxIter; iter++) {
 			createdAgents = 0;
 //			File input = new File("maps/empty.map");
 //			File input_new = new File("maps/empty_new.map");
-			File input = new File("maps/comm-rm.map");
-			File input_new = new File("maps/comm-rm_new.map");
+			File input = new File("maps/comm-im.map");
+			File input_new = new File("maps/comm-im_new.map");
 			try {
 				copyFileUsingChannel(input, input_new);
 			} catch (IOException e) {
@@ -63,23 +62,23 @@ public class Main {
 			targetCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			obstacleCoords = new ArrayList<Pair<Integer,Integer>>(); 
 			readObstacleCoords(input_new);
-			int offCnt = 50;
-			int defCnt = 25;
+			int offCnt = 0;
+			int defCnt = 0;
 			agentCnt = offCnt + defCnt;
-			int x1 = 40;
+			int x1 = 22;
 			int y1 = 1;
-			int w1 = 10;
+			int w1 = 15;
 			int h1 = 20;
-			int x2 = 1;
-			int y2 = 52; // start now!
-			int w2 = 30;
-			int h2 = 15;
-			int seed = 111;
+			int x2 = 15;
+			int y2 = 83; // start now!
+			int w2 = 10;
+			int h2 = 18;
+			int seed = 111 * iter;
 			rndGen = new Random(seed);
 			generateOffensive(x1, y1, w1, h1, x2, y2, w2, h2, offCnt, input_new);
-			int x = 40;
+			int x = 22;
 			int y = 1;
-			int w = 10;
+			int w = 15;
 			int h = 20;
 			generateDeffensive(x,y,w,h,defCnt,input_new);
 			

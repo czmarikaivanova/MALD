@@ -565,5 +565,18 @@ public class Map implements Iterable<Location> {
 		return visGraph[ccLoc.getLinId()][loc.getLinId()];
 	}
 
+	/**
+	 * for a given location, calculate the sum of all distances to the targets in the map
+	 * @param loc
+	 * @return
+	 */
+	public int calculatedSumDstToTargets(Location loc) {
+		int sumDst = 0;
+		for (Location target: targets) {
+			sumDst += getDst(loc, target);
+		}
+		return sumDst;
+	}
+
 
 }
